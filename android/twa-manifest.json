@@ -1,0 +1,18 @@
+{
+  "packageId": "com.sweetwheel.app",
+  "host": "rrme0111-dotcom.github.io",
+  "name": "甜心转盘",
+  "launcherName": "甜心转盘",
+  "display": "standalone",
+  "themeColor": "#FF8FA3",
+  "backgroundColor": "#FFF5F5",
+  "startUrl": "/Rr_01/",
+  "iconUrl": "https://rrme0111-dotcom.github.io/Rr_01/assets/icons/icon-512.png",
+  "maskableIconUrl": "https://rrme0111-dotcom.github.io/Rr_01/assets/icons/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "app.keystore",
+    "alias": "twa",
+    "password": "android123"
+  }
+}

@@ -1440,25 +1440,16 @@ const App = {
       </div>
 
       <div class="form-group">
-        <label class="form-label">⏱️ 旋转时长</label>
-        <div class="style-selector" id="durationSelector">
-          <div class="style-card${!wheelData?.spinDuration || wheelData.spinDuration === 4 ? ' selected' : ''}" data-dur="4">
-            <div class="style-card-emoji">⚡</div>
-            <div class="style-card-name">快速 4秒</div>
-          </div>
-          <div class="style-card${wheelData?.spinDuration === 6 ? ' selected' : ''}" data-dur="6">
-            <div class="style-card-emoji">🎯</div>
-            <div class="style-card-name">标准 6秒</div>
-          </div>
-          <div class="style-card${wheelData?.spinDuration === 8 ? ' selected' : ''}" data-dur="8">
-            <div class="style-card-emoji">🎡</div>
-            <div class="style-card-name">悠哉 8秒</div>
-          </div>
-          <div class="style-card${wheelData?.spinDuration === 10 ? ' selected' : ''}" data-dur="10">
-            <div class="style-card-emoji">🐢</div>
-            <div class="style-card-name">慢转 10秒</div>
-          </div>
+        <label class="form-label">⏱️ 旋转时长（秒）</label>
+        <div style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:var(--radius-md);padding:14px 18px;box-shadow:var(--shadow-card);">
+          <input type="number" id="inputDuration" value="${wheelData?.spinDuration || 4}"
+                 min="0.5" step="0.5" max="30"
+                 style="flex:1;height:48px;border:2px solid var(--pink-light);border-radius:12px;padding:0 14px;font-size:18px;font-weight:700;color:var(--pink-primary);text-align:center;font-family:var(--font-stack);outline:none;"
+                 onfocus="this.style.borderColor='var(--pink-primary)';this.style.boxShadow='0 0 0 4px rgba(255,143,163,0.15)'"
+                 onblur="this.style.borderColor='var(--pink-light)';this.style.boxShadow='none';if(this.value<0.5)this.value=0.5">
+          <span style="font-size:16px;font-weight:600;color:var(--warm-gray);white-space:nowrap;">秒/圈</span>
         </div>
+        <span style="font-size:11px;color:var(--pink-primary);opacity:0.6;margin-top:4px;">💡 最短 0.5 秒，数字越小转得越快</span>
       </div>
 
       <button class="btn btn-primary" style="width:100%;margin-top:var(--space-md);" id="btnSaveWheel">
@@ -1528,7 +1519,7 @@ const App = {
     document.getElementById('btnSaveWheel').addEventListener('click', () => {
       const name = document.getElementById('inputWheelName').value.trim() || '未命名转盘';
       const style = document.querySelector('#styleSelector .style-card.selected')?.dataset?.style || 'strawberry';
-      const spinDuration = parseInt(document.querySelector('#durationSelector .style-card.selected')?.dataset?.dur) || 4;
+      const spinDuration = parseFloat(document.getElementById('inputDuration')?.value) || 4;
       const rings = [];
       document.querySelectorAll('#ringsEditor .ring-editor-card').forEach(card => {
         const nameInput = card.querySelector('.ring-editor-name');
@@ -1582,16 +1573,6 @@ const App = {
         this.toast('📋 ' + tpl.name + ' 模板已加载！');
       });
     });
-
-    // 时长选择
-    setTimeout(() => {
-      document.querySelectorAll('#durationSelector .style-card').forEach(card => {
-        card.addEventListener('click', () => {
-          document.querySelectorAll('#durationSelector .style-card').forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
-        });
-      });
-    }, 50);
 
     // 样式选择
     setTimeout(() => {
@@ -1794,7 +1775,7 @@ const App = {
     const ctx = canvas.getContext('2d');
     const cx = size, cy = size;
     const totalRotation = (5 + Math.random() * 6) * Math.PI * 2 + Math.random() * Math.PI * 2;
-    const baseDuration = (wheel.spinDuration || 4) * 1000;
+    const baseDuration = Math.max(0.5, wheel.spinDuration || 4) * 1000;
     const duration = baseDuration + Math.random() * 1000;
     const startTime = performance.now();
     const startAngle = this.currentAngle;

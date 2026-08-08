@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FF8FA3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>🎡 甜心转盘</title>
+<style>
+/* ============================================
+   设计系统变量 — 参照 docs/design-system.md
+   ============================================ */
+:root {
+  /* 主色板（草莓甜心） */
+  --pink-primary:    #FF8FA3;
+  --pink-light:      #FFD1DC;
+  --pink-bg:         #FFF5F5;
+  --pink-deep:       #E87A8F;
+  --mint-accent:     #C8E6C9;
+  --warm-gray:       #8D6E7F;
+  --white:           #FFFFFF;
+
+  /* 字体 */
+  --font-stack: system-ui, -apple-system, 'Segoe UI', 'PingFang SC',
+                'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
+  --font-xs:    12px;
+  --font-sm:    14px;
+  --font-md:    16px;
+  --font-lg:    22px;
+  --font-xl:    28px;
+  --font-xxl:   36px;
+
+  /* 圆角 */
+  --radius-xs:   8px;
+  --radius-sm:  12px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  50px;
+
+  /* 间距 */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-xxl: 48px;
+
+  /* 阴影 */
+  --shadow-card:    0 4px 20px rgba(255, 143, 163, 0.20);
+  --shadow-button:  0 6px 24px rgba(255, 143, 163, 0.35);
+  --shadow-pressed: 0 2px 8px rgba(255, 143, 163, 0.30);
+  --shadow-modal:   0 12px 48px rgba(0, 0, 0, 0.12);
+  --shadow-wheel:   0 8px 32px rgba(255, 143, 163, 0.30),
+                    0 2px 8px rgba(255, 143, 163, 0.15);
+
+  /* 动画 */
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spin:    cubic-bezier(0.15, 0.80, 0.30, 0.98);
+}
+
+/* ============================================
+   全局重置
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-stack);
+  font-size: var(--font-sm);
+  font-weight: 400;
+  color: var(--warm-gray);
+  background: linear-gradient(180deg, var(--pink-bg) 0%, var(--pink-light) 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ============================================
+   应用容器
+   ============================================ */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ============================================
+   视图管理
+   ============================================ */
+.view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--space-lg);
+  animation: viewEnter 300ms var(--ease-out);
+}
+
+.view.active {
+  display: flex;
+}
+
+@keyframes viewEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   页面标题
+   ============================================ */
+.page-header {
+  text-align: center;
+  padding: var(--space-lg) 0 var(--space-md);
+}
+
+.page-title {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--pink-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.page-subtitle {
+  font-size: var(--font-sm);
+  color: var(--pink-light);
+  font-weight: 400;
+}
+
+/* ============================================
+   头部导航栏
+   ============================================ */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) 0;
+  gap: var(--space-md);
+}
+
+.btn-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s var(--ease-out);
+  flex-shrink: 0;
+}
+
+.btn-back:active {
+  transform: scale(0.92);
+}
+
+.nav-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--pink-primary);
+}
+
+/* ============================================
+   按钮系统
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-family: var(--font-stack);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink-primary), var(--pink-deep));
+  color: var(--white);
+  font-size: 18px;
+  height: 56px;
+  padding: 0 var(--space-xl);
+  min-width: 200px;
+  box-shadow: var(--shadow-button);
+  animation: btnBreathe 2s ease-in-out infinite;
+}
+
+@keyframes btnBreathe {
+  0%, 100% { box-shadow: var(--shadow-button); }
+  50%      { box-shadow: 0 6px 32px rgba(255, 143, 163, 0.50); }
+}
+
+.btn-primary:active {
+  box-shadow: var(--shadow-pressed);
+  animation: none;
+}
+
+/* 次要按钮 */
+.btn-secondary {
+  background: var(--white);
+  color: var(--pink-primary);
+  font-size: var(--font-md);
+  height: 48px;
+  padding: 0 var(--space-lg);
+  border: 2px solid var(--pink-light);
+  box-shadow: var(--shadow-card);
+}
+
+/* 小按钮 */
+.btn-sm {
+  height: 36px;
+  padding: 0 var(--space-md);
+  font-size: var(--font-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 18px;
+  background: var(--pink-light);
+  color: var(--pink-primary);
+}
+
+.btn-danger {
+  background: #FF5252;
+  color: var(--white);
+}
+
+/* 浮动操作按钮 */
+.fab {
+  position: fixed;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  animation: btnBreathe 2s ease-in-out infinite;
+}
+
+/* ============================================
+   首页 — 我的转盘列表
+   ============================================ */
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 空状态 */
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-md);
+}
+
+.empty-illustration {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-illustration svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 迷你转盘装饰 */
+.empty-mini-wheel {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 3px solid #FFD1DC;
+  background: conic-gradient(
+    #FFB5C2 0deg 60deg, #FFF5F5 60deg 120deg,
+    #FFABAB 120deg 180deg, #FFF5F5 180deg 240deg,
+    #FFC8D6 240deg 300deg, #FFF5F5 300deg 360deg
+  );
+  top: 2px;
+  right: 8px;
+  box-shadow: 0 3px 10px rgba(255,143,163,0.3);
+  animation: miniSpin 6s linear infinite;
+}
+
+.empty-mini-wheel::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #FFF;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+@keyframes miniSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+.empty-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--pink-primary);
+}
+
+.empty-desc {
+  font-size: var(--font-sm);
+  color: var(--pink-primary);
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+/* 转盘卡片列表 */
+.wheel-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-bottom: 100px; /* 为 FAB 留空间 */
+}
+
+.wheel-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.wheel-card:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-pressed);
+}
+
+.wheel-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.wheel-card-icon.strawberry { background: #FFF0F3; }
+.wheel-card-icon.sakura     { background: #FFF0F7; }
+.wheel-card-icon.cake       { background: #FFF5F0; }
+
+.wheel-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wheel-card-name {
+  font-size: var(--font-md);
+  font-weight: 600;
+  color: var(--warm-gray);
+  margin-bottom: var(--space-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wheel-card-meta {
+  font-size: var(--font-xs);
+  color: var(--pink-primary);
+  opacity: 0.7;
+}
+
+.wheel-card-arrow {
+  font-size: 20px;
+  color: var(--pink-light);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   编辑页
+   ============================================ */
+.editor-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: 100px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.form-label {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--pink-primary);
+}
+
+.form-input {
+  height: 48px;
+  border: 2px solid var(--pink-light);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-md);
+  font-family: var(--font-stack);
+  font-size: var(--font-md);
+  color: var(--warm-gray);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.form-input:focus {
+  border-color: var(--pink-primary);
+  box-shadow: 0 0 0 4px rgba(255, 143, 163, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--pink-light);
+}
+
+/* 圈数选择器 */
+.ring-count-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.ring-count-label {
+  flex: 1;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--warm-gray);
+}
+
+.ring-count-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.ring-count-value {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--pink-primary);
+  min-width: 32px;
+  text-align: center;
+}
+
+/* 圈编辑区域 */
+.rings-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ring-editor-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.ring-editor-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.ring-color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ring-editor-name {
+  flex: 1;
+  height: 36px;
+  border: 1px solid var(--pink-light);
+  border-radius: var(--radius-xs);
+  padding: 0 var(--space-sm);
+  font-size: var(--font-sm);
+  font-family: var(--font-stack);
+  color: var(--warm-gray);
+  font-weight: 600;
+}
+
+.ring-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ring-option-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ring-option-input {
+  flex: 1;
+  height: 40px;
+  border: 1px solid var(--pink-light);
+  border-radius: var(--radius-xs);
+  padding: 0 var(--space-sm);
+  font-size: var(--font-sm);
+  font-family: var(--font-stack);
+  color: var(--warm-gray);
+}
+
+.btn-remove-option {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #FEE;
+  color: #F88;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-add-option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  border: 1px dashed var(--pink-light);
+  border-radius: var(--radius-xs);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-xs);
+  color: var(--pink-primary);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-stack);
+  margin-top: var(--space-sm);
+}
+
+/* 样式选择器 */
+.style-selector {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.style-card {
+  flex: 1;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all 0.2s var(--ease-out);
+}
+
+.style-card.selected {
+  border-color: var(--pink-primary);
+  box-shadow: 0 0 0 4px rgba(255, 143, 163, 0.15);
+}
+
+.style-card-emoji {
+  font-size: 36px;
+  margin-bottom: var(--space-sm);
+}
+
+.style-card-name {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--warm-gray);
+}
+
+/* 模板按钮 */
+.template-section {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.btn-template {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--white);
+  border: 2px solid var(--pink-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--pink-primary);
+  cursor: pointer;
+  font-family: var(--font-stack);
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s var(--ease-out);
+}
+
+.btn-template:active {
+  background: var(--pink-bg);
+  transform: scale(0.96);
+}
+
+/* ============================================
+   旋转页
+   ============================================ */
+.spinner-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.wheel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel-canvas {
+  display: block;
+  filter: drop-shadow(var(--shadow-wheel));
+}
+
+/* 指针 */
+.wheel-pointer {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-size: 36px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  pointer-events: none;
+}
+
+/* 旋转信息 */
+.spin-info {
+  text-align: center;
+  color: var(--pink-primary);
+  font-size: var(--font-sm);
+  opacity: 0.7;
+}
+
+/* ============================================
+   结果弹窗
+   ============================================ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-sheet {
+  background: var(--white);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: 100%;
+  max-width: 480px;
+  padding: var(--space-xl) var(--space-lg) calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
+  animation: sheetUp 400ms var(--ease-bounce);
+  box-shadow: var(--shadow-modal);
+}
+
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.modal-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--pink-light);
+  border-radius: 2px;
+  margin: 0 auto var(--space-lg);
+}
+
+.result-title {
+  text-align: center;
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--pink-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--pink-bg);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  animation: resultStagger 200ms var(--ease-out) both;
+}
+
+.result-item:nth-child(1) { animation-delay: 100ms; }
+.result-item:nth-child(2) { animation-delay: 200ms; }
+.result-item:nth-child(3) { animation-delay: 300ms; }
+.result-item:nth-child(4) { animation-delay: 400ms; }
+.result-item:nth-child(5) { animation-delay: 500ms; }
+.result-item:nth-child(6) { animation-delay: 600ms; }
+
+@keyframes resultStagger {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.result-ring-name {
+  font-size: var(--font-xs);
+  color: var(--pink-primary);
+  opacity: 0.7;
+  font-weight: 600;
+  min-width: 56px;
+}
+
+.result-ring-value {
+  font-size: var(--font-md);
+  font-weight: 700;
+  color: var(--warm-gray);
+  flex: 1;
+}
+
+.result-actions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.result-actions .btn {
+  flex: 1;
+}
+
+/* ============================================
+   庆祝粒子画布
+   ============================================ */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+/* ============================================
+   装饰元素
+   ============================================ */
+.floating-decorations {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.deco {
+  position: absolute;
+  opacity: 0.15;
+  animation: decoFloat 8s ease-in-out infinite;
+}
+
+.deco:nth-child(1) { top: 5%;  left: 5%;  font-size: 32px; animation-delay: 0s; }
+.deco:nth-child(2) { top: 8%;  right: 8%; font-size: 24px; animation-delay: 2s; }
+.deco:nth-child(3) { top: 60%; left: 3%;  font-size: 20px; animation-delay: 4s; }
+.deco:nth-child(4) { top: 70%; right: 5%; font-size: 28px; animation-delay: 6s; }
+.deco:nth-child(5) { top: 30%; left: 88%; font-size: 18px; animation-delay: 3s; }
+.deco:nth-child(6) { top: 85%; left: 80%; font-size: 22px; animation-delay: 5s; }
+
+@keyframes decoFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-15px) rotate(10deg); }
+}
+
+/* ============================================
+   Toast 提示
+   ============================================ */
+.toast {
+  position: fixed;
+  top: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--warm-gray);
+  color: var(--white);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  z-index: 2000;
+  animation: toastIn 300ms var(--ease-out);
+  pointer-events: none;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- 浮动装饰 -->
+<div class="floating-decorations">
+  <span class="deco">🍓</span>
+  <span class="deco">🌸</span>
+  <span class="deco">🎀</span>
+  <span class="deco">🧁</span>
+  <span class="deco">💖</span>
+  <span class="deco">⭐</span>
+</div>
+
+<!-- 庆祝粒子画布 -->
+<canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+
+<!-- 应用容器 -->
+<div class="app-container" id="appContainer">
+
+  <!-- ========== 视图1: 首页 ========== -->
+  <section class="view active" id="viewHome">
+    <div class="page-header">
+      <h1 class="page-title">🎡 甜心转盘</h1>
+      <p class="page-subtitle">转一转，帮你做决定~</p>
+    </div>
+    <div class="home-content" id="homeContent">
+      <!-- 由 JS 动态渲染 -->
+    </div>
+    <button class="btn btn-primary fab" id="btnNewWheel">
+      ✨ 新建转盘
+    </button>
+  </section>
+
+  <!-- ========== 视图2: 编辑页 ========== -->
+  <section class="view" id="viewEditor">
+    <div class="nav-bar">
+      <button class="btn-back" id="btnEditorBack">←</button>
+      <span class="nav-title">✏️ 编辑转盘</span>
+    </div>
+    <div class="editor-content" id="editorContent">
+      <!-- 由 JS 动态渲染 -->
+    </div>
+  </section>
+
+  <!-- ========== 视图3: 旋转页 ========== -->
+  <section class="view" id="viewSpinner">
+    <div class="nav-bar">
+      <button class="btn-back" id="btnSpinnerBack">←</button>
+      <span class="nav-title">🎡 旋转转盘</span>
+    </div>
+    <div class="spinner-content" id="spinnerContent">
+      <!-- 由 JS 动态渲染 -->
+    </div>
+  </section>
+
+  <!-- ========== 结果弹窗 ========== -->
+  <div class="modal-overlay" id="modalResult">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h2 class="result-title">🎉 结果揭晓！</h2>
+      <div class="result-list" id="resultList">
+        <!-- 由 JS 动态渲染 -->
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-secondary" id="btnResultClose">↩ 返回</button>
+        <button class="btn btn-primary" id="btnResultSpinAgain">🔄 再转一次</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================
+   音效引擎 — Web Audio API 合成
+   ============================================ */
+const AudioEngine = {
+  ctx: null,
+
+  init() {
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) {
+      this.ctx = null;
+    }
+  },
+
+  ensure() {
+    if (!this.ctx) this.init();
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  },
+
+  /* 刻度音 — 短促嘀嗒 */
+  tick() {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200, t);
+    osc.frequency.exponentialRampToValueAtTime(600, t + 0.04);
+
+    gain.gain.setValueAtTime(0.08, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+
+    osc.start(t);
+    osc.stop(t + 0.04);
+  },
+
+  /* 完成音 — 上行琶音 */
+  fanfare() {
+    if (!this.ctx) return;
+    const notes = [523, 659, 784, 1047]; // C5 E5 G5 C6
+    notes.forEach((freq, i) => {
+      const t = this.ctx.currentTime + i * 0.1;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+      osc.start(t);
+      osc.stop(t + 0.25);
+    });
+  }
+};
+
+/* ============================================
+   庆祝粒子
+   ============================================ */
+const Confetti = {
+  particles: [],
+  canvas: null,
+  ctx: null,
+  animId: null,
+
+  fire() {
+    this.canvas = document.getElementById('confettiCanvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.resize();
+    this.particles = [];
+
+    const colors = ['#FF8FA3','#FFD1DC','#FFB7C5','#FF9CB0','#FFF5F5','#FFABAB','#FFC8D6','#FFE082'];
+    for (let i = 0; i < 60; i++) {
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: -20 - Math.random() * 200,
+        w: 6 + Math.random() * 8,
+        h: 4 + Math.random() * 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 3,
+        vy: 2 + Math.random() * 4,
+        rot: Math.random() * 360,
+        rotV: (Math.random() - 0.5) * 12,
+        opacity: 1
+      });
+    }
+
+    this.animate();
+    setTimeout(() => this.stop(), 2000);
+  },
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  },
+
+  animate() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    let alive = false;
+
+    this.particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rotV;
+      p.vy += 0.06;
+      p.opacity -= 0.004;
+
+      if (p.opacity > 0 && p.y < this.canvas.height + 50) {
+        alive = true;
+        this.ctx.save();
+        this.ctx.translate(p.x, p.y);
+        this.ctx.rotate(p.rot * Math.PI / 180);
+        this.ctx.globalAlpha = Math.max(0, p.opacity);
+        this.ctx.fillStyle = p.color;
+        this.ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        this.ctx.restore();
+      }
+    });
+
+    if (alive) {
+      this.animId = requestAnimationFrame(() => this.animate());
+    }
+  },
+
+  stop() {
+    if (this.animId) cancelAnimationFrame(this.animId);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.particles = [];
+  }
+};
+
+/* ============================================
+   转盘样式配色方案
+   ============================================ */
+const WHEEL_STYLES = {
+  strawberry: {
+    name: '草莓甜心',
+    emoji: '🍓',
+    bgGradient: 'linear-gradient(180deg, #FFF5F5 0%, #FFD1DC 100%)',
+    colors: [
+      '#FFB5C2','#FFD1DC','#FFABAB','#FFC8D6',
+      '#FFE0E5','#FF9CB0','#FFC2D0','#FFDDE5',
+      '#FFBFC9','#FFD6E0','#FFAAA8','#FFC8D0',
+      '#FFE5EA','#FFBAD0','#FFD0DA','#FFCCD5',
+      '#FF9FB5','#FFD8E2','#FFB8C8','#FFE2E8'
+    ],
+    borderColor: 'rgba(255,255,255,0.6)',
+    textColor: '#8D6E7F',
+    centerColor: '#FFD1DC',
+    pointer: '🎀',
+    decoration: '🍓'
+  },
+  sakura: {
+    name: '樱花物语',
+    emoji: '🌸',
+    bgGradient: 'linear-gradient(180deg, #FFF0F5 0%, #E8D5F5 100%)',
+    colors: [
+      '#FFB7C5','#FFD6E0','#E8D5F5','#FFC2D0',
+      '#F5E0EB','#FFC8D8','#E0D0F0','#FFD4DE',
+      '#F0DDF5','#FFBFC9','#E5D8F2','#FFD0DA',
+      '#EDD8F0','#FFC5D2','#E2D5EE','#FFCCD8',
+      '#F0E0F5','#FFBAD0','#E8DCF3','#FFD8E2'
+    ],
+    borderColor: 'rgba(255,255,255,0.5)',
+    textColor: '#8D7E8F',
+    centerColor: '#E8D5F5',
+    pointer: '🌸',
+    decoration: '🌸'
+  },
+  cake: {
+    name: '甜心蛋糕',
+    emoji: '🎀',
+    bgGradient: 'linear-gradient(180deg, #FFF5F0 0%, #FFF3C4 40%, #D5C6F0 100%)',
+    colors: [
+      '#FF9CB0','#FFF3C4','#D5C6F0','#FFABBC',
+      '#FFE8B0','#D8C8F0','#FFB5C5','#FFEDC0',
+      '#D0C0EC','#FFA0B5','#FFF0C8','#DCCAF2',
+      '#FFB8C8','#FFE5B8','#D4C4EE','#FFA8BA',
+      '#FFECC4','#D8CCF0','#FFB0C0','#FFEABC'
+    ],
+    borderColor: 'rgba(255,255,255,0.55)',
+    textColor: '#8D7E7F',
+    centerColor: '#FFF3C4',
+    pointer: '🕯️',
+    decoration: '🧁'
+  }
+};
+
+/* ============================================
+   应用主控 — 甜心转盘
+   ============================================ */
+const App = {
+  // 当前状态
+  currentView: 'home',
+  currentWheelId: null,
+  isSpinning: false,
+  currentAngle: 0,
+
+  /* ---- 视图切换 ---- */
+  showView(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById('view' + name.charAt(0).toUpperCase() + name.slice(1));
+    if (target) {
+      target.classList.add('active');
+      // 重新触发入场动画
+      target.style.animation = 'none';
+      target.offsetHeight; // reflow
+      target.style.animation = '';
+    }
+    this.currentView = name;
+    // 离开旋转页时恢复默认背景
+    if (name !== 'spinner') {
+      document.body.style.background = '';
+    }
+  },
+
+  /* ---- 数据操作（阶段2将增强） ---- */
+  loadWheels() {
+    try {
+      const raw = localStorage.getItem('spinning-wheel-data');
+      return raw ? JSON.parse(raw).wheels : [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  saveWheels(wheels) {
+    localStorage.setItem('spinning-wheel-data', JSON.stringify({ wheels }));
+  },
+
+  /* ---- Toast 提示 ---- */
+  toast(msg) {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  },
+
+  /* ---- 初始化 ---- */
+  init() {
+    this.renderHome();
+    this.bindEvents();
+  },
+
+  /* ---- 事件绑定 ---- */
+  bindEvents() {
+    // 新建转盘
+    document.getElementById('btnNewWheel').addEventListener('click', () => {
+      this.currentWheelId = null;
+      this.renderEditor();
+      this.showView('editor');
+    });
+
+    // 编辑页返回
+    document.getElementById('btnEditorBack').addEventListener('click', () => {
+      this.renderHome();
+      this.showView('home');
+    });
+
+    // 旋转页返回
+    document.getElementById('btnSpinnerBack').addEventListener('click', () => {
+      this.renderHome();
+      this.showView('home');
+    });
+
+    // 结果弹窗按钮
+    document.getElementById('btnResultClose').addEventListener('click', () => {
+      document.getElementById('modalResult').classList.remove('active');
+      this.renderHome();
+      this.showView('home');
+    });
+
+    document.getElementById('btnResultSpinAgain').addEventListener('click', () => {
+      document.getElementById('modalResult').classList.remove('active');
+      this.startSpin();
+    });
+  },
+
+  /* ========================================
+     首页渲染
+     ======================================== */
+  renderHome() {
+    const wheels = this.loadWheels();
+    const container = document.getElementById('homeContent');
+
+    if (wheels.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-illustration">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <!-- 左耳 -->
+              <circle cx="25" cy="28" r="18" fill="#C28B6E"/>
+              <circle cx="25" cy="28" r="10" fill="#E8C9B0"/>
+              <!-- 右耳 -->
+              <circle cx="95" cy="28" r="18" fill="#C28B6E"/>
+              <circle cx="95" cy="28" r="10" fill="#E8C9B0"/>
+              <!-- 脸 -->
+              <circle cx="60" cy="60" r="42" fill="url(#bearFace)"/>
+              <!-- 眼睛 -->
+              <circle cx="44" cy="54" r="5" fill="#3E2723"/>
+              <circle cx="45.5" cy="52" r="2" fill="#FFF"/>
+              <circle cx="76" cy="54" r="5" fill="#3E2723"/>
+              <circle cx="77.5" cy="52" r="2" fill="#FFF"/>
+              <!-- 腮红 -->
+              <ellipse cx="34" cy="64" rx="7" ry="4" fill="rgba(255,150,140,0.3)"/>
+              <ellipse cx="86" cy="64" rx="7" ry="4" fill="rgba(255,150,140,0.3)"/>
+              <!-- 鼻子 -->
+              <ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#A67B6B"/>
+              <ellipse cx="58.5" cy="67" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.35)"/>
+              <!-- 嘴巴 -->
+              <path d="M54 75 Q60 80 60 74 Q60 80 66 75" stroke="#A67B6B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <defs>
+                <radialGradient id="bearFace" cx="38%" cy="32%">
+                  <stop offset="0%" stop-color="#DDB89E"/>
+                  <stop offset="100%" stop-color="#C28B6E"/>
+                </radialGradient>
+              </defs>
+            </svg>
+            <div class="empty-mini-wheel"></div>
+          </div>
+          <div class="empty-title">还没有转盘哦~</div>
+          <div class="empty-desc">
+            点下方按钮<br>创建你的第一个甜心转盘吧！
+          </div>
+        </div>
+      `;
+    } else {
+      const styleEmojis = { strawberry: '🍓', sakura: '🌸', cake: '🎀' };
+      const items = wheels.map(w => `
+        <div class="wheel-card" data-id="${w.id}">
+          <div class="wheel-card-icon ${w.style || 'strawberry'}">
+            ${styleEmojis[w.style] || '🍓'}
+          </div>
+          <div class="wheel-card-info">
+            <div class="wheel-card-name">${this.escapeHtml(w.name)}</div>
+            <div class="wheel-card-meta">${w.rings.length}圈 · ${w.rings.reduce((s,r) => s + r.options.length, 0)}个选项</div>
+          </div>
+          <span class="wheel-card-arrow">›</span>
+        </div>
+      `).join('');
+
+      container.innerHTML = `<div class="wheel-list">${items}</div>`;
+
+      // 点击卡片进入旋转
+      container.querySelectorAll('.wheel-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.id;
+          const wheel = wheels.find(w => w.id === id);
+          if (wheel) {
+            this.currentWheelId = id;
+            this.renderSpinner(wheel);
+            this.showView('spinner');
+          }
+        });
+
+        // 长按删除
+        let longPressTimer;
+        card.addEventListener('touchstart', () => {
+          longPressTimer = setTimeout(() => {
+            if (confirm('确定要删除这个转盘吗？')) {
+              const id = card.dataset.id;
+              const wheels = this.loadWheels().filter(w => w.id !== id);
+              this.saveWheels(wheels);
+              this.renderHome();
+              this.toast('🗑️ 已删除');
+            }
+          }, 600);
+        });
+        card.addEventListener('touchend', () => clearTimeout(longPressTimer));
+        card.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+      });
+    }
+  },
+
+  /* ========================================
+     编辑页渲染（阶段3将增强）
+     ======================================== */
+  renderEditor(wheelData) {
+    const container = document.getElementById('editorContent');
+    const isEdit = !!wheelData;
+
+    container.innerHTML = `
+      <div class="form-group">
+        <label class="form-label">📝 转盘名称</label>
+        <input class="form-input" id="inputWheelName"
+               placeholder="例如：烹饪发烧友决策"
+               value="${this.escapeHtml(wheelData?.name || '')}">
+      </div>
+
+      <div class="ring-count-selector">
+        <span class="ring-count-label">🎯 圈数</span>
+        <div class="ring-count-controls">
+          <button class="btn btn-sm btn-secondary" id="btnRingMinus">−</button>
+          <span class="ring-count-value" id="ringCount">4</span>
+          <button class="btn btn-sm btn-secondary" id="btnRingPlus">+</button>
+        </div>
+      </div>
+
+      <div class="rings-editor" id="ringsEditor">
+        <!-- 动态生成 -->
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">🎨 转盘样式</label>
+        <div class="style-selector" id="styleSelector">
+          <div class="style-card selected" data-style="strawberry">
+            <div class="style-card-emoji">🍓</div>
+            <div class="style-card-name">草莓甜心</div>
+          </div>
+          <div class="style-card" data-style="sakura">
+            <div class="style-card-emoji">🌸</div>
+            <div class="style-card-name">樱花物语</div>
+          </div>
+          <div class="style-card" data-style="cake">
+            <div class="style-card-emoji">🎀</div>
+            <div class="style-card-name">甜心蛋糕</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">📋 快速模板</label>
+        <div class="template-section">
+          <button class="btn-template" id="btnTemplateCooking">🍳 烹饪发烧友</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;margin-top:var(--space-md);" id="btnSaveWheel">
+        💾 保存转盘
+      </button>
+    `;
+
+    // 初始化圈编辑
+    let ringCount = wheelData?.rings?.length || 4;
+    const ringColors = ['#FFB5C2','#FFD1DC','#FFABAB','#FFC8D6','#FFE0E5','#FF9CB0'];
+
+    const updateRingsEditor = () => {
+      const editor = document.getElementById('ringsEditor');
+      const currentInputs = editor.querySelectorAll('.ring-editor-card');
+      const currentData = [];
+      currentInputs.forEach(card => {
+        const nameInput = card.querySelector('.ring-editor-name');
+        const optionInputs = card.querySelectorAll('.ring-option-input');
+        currentData.push({
+          name: nameInput?.value || '',
+          options: Array.from(optionInputs).map(inp => inp.value)
+        });
+      });
+
+      let html = '';
+      for (let i = 0; i < ringCount; i++) {
+        const saved = (wheelData?.rings?.[i]) || currentData[i] || null;
+        const name = saved?.name || `第${i+1}圈`;
+        const options = saved?.options || ['选项1', '选项2'];
+        const color = ringColors[i % ringColors.length];
+
+        html += `
+        <div class="ring-editor-card" data-ring="${i}">
+          <div class="ring-editor-header">
+            <span class="ring-color-dot" style="background:${color}"></span>
+            <input class="ring-editor-name" value="${this.escapeHtml(name)}" placeholder="圈名称">
+          </div>
+          <div class="ring-options-list">
+            ${options.map((opt, oi) => `
+              <div class="ring-option-row">
+                <input class="ring-option-input" value="${this.escapeHtml(opt)}" placeholder="选项${oi+1}">
+                ${options.length > 2 ? `<button class="btn-remove-option">×</button>` : ''}
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn-add-option">+ 添加选项</button>
+        </div>`;
+      }
+      editor.innerHTML = html;
+
+      // 绑定事件
+      this.bindEditorEvents(ringColors);
+    };
+
+    document.getElementById('ringCount').textContent = ringCount;
+    updateRingsEditor();
+
+    // 圈数增减
+    document.getElementById('btnRingMinus').addEventListener('click', () => {
+      if (ringCount > 2) { ringCount--; document.getElementById('ringCount').textContent = ringCount; updateRingsEditor(); }
+    });
+    document.getElementById('btnRingPlus').addEventListener('click', () => {
+      if (ringCount < 6) { ringCount++; document.getElementById('ringCount').textContent = ringCount; updateRingsEditor(); }
+    });
+
+    // 保存
+    document.getElementById('btnSaveWheel').addEventListener('click', () => {
+      const name = document.getElementById('inputWheelName').value.trim() || '未命名转盘';
+      const style = document.querySelector('#styleSelector .style-card.selected')?.dataset?.style || 'strawberry';
+      const rings = [];
+      document.querySelectorAll('#ringsEditor .ring-editor-card').forEach(card => {
+        const nameInput = card.querySelector('.ring-editor-name');
+        const optionInputs = card.querySelectorAll('.ring-option-input');
+        const opts = Array.from(optionInputs).map(inp => inp.value.trim()).filter(v => v);
+        if (opts.length >= 2) {
+          rings.push({
+            name: nameInput?.value?.trim() || `第${rings.length+1}圈`,
+            color: ringColors[rings.length % ringColors.length],
+            options: opts
+          });
+        }
+      });
+
+      if (rings.length < 2) {
+        this.toast('⚠️ 至少需要2圈，每圈至少2个选项');
+        return;
+      }
+
+      const wheel = {
+        id: this.currentWheelId || Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+        name,
+        style,
+        rings,
+        createdAt: new Date().toISOString()
+      };
+
+      const wheels = this.loadWheels();
+      const idx = wheels.findIndex(w => w.id === wheel.id);
+      if (idx >= 0) wheels[idx] = wheel;
+      else wheels.push(wheel);
+      this.saveWheels(wheels);
+
+      this.toast('✅ 保存成功！');
+      this.renderHome();
+      this.showView('home');
+    });
+
+    // 烹饪发烧友模板
+    document.getElementById('btnTemplateCooking')?.addEventListener('click', () => {
+      ringCount = 4;
+      document.getElementById('ringCount').textContent = ringCount;
+      document.getElementById('inputWheelName').value = '烹饪发烧友决策';
+
+      const templateRings = [
+        { name: '选择餐厅', options: ['🍣 寿司店','🍔 汉堡店','🍕 披萨店','🍩 甜品店'] },
+        { name: '关卡数量', options: ['玩3关','玩5关','玩8关'] },
+        { name: '升级与否', options: ['👍 能升级','👎 不升级'] },
+        { name: '升级次数', options: ['升1次','升2次','升3次'] }
+      ];
+
+      this.currentWheelId = null;
+      this.renderEditor({ rings: templateRings, style: 'strawberry', name: '烹饪发烧友决策' });
+      this.toast('📋 模板已加载！');
+    });
+
+    // 样式选择
+    setTimeout(() => {
+      document.querySelectorAll('#styleSelector .style-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('#styleSelector .style-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+        });
+      });
+      if (wheelData?.style) {
+        const target = document.querySelector(`#styleSelector .style-card[data-style="${wheelData.style}"]`);
+        if (target) {
+          document.querySelectorAll('#styleSelector .style-card').forEach(c => c.classList.remove('selected'));
+          target.classList.add('selected');
+        }
+      }
+    }, 50);
+  },
+
+  bindEditorEvents(ringColors) {
+    // 删除选项
+    document.querySelectorAll('.btn-remove-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('.ring-option-row');
+        const card = btn.closest('.ring-editor-card');
+        const rows = card.querySelectorAll('.ring-option-row');
+        if (rows.length > 2) {
+          row.remove();
+          this.updateRemoveButtons(card);
+        } else {
+          this.toast('⚠️ 每圈至少需要2个选项');
+        }
+      });
+    });
+
+    // 添加选项
+    document.querySelectorAll('.btn-add-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.ring-editor-card');
+        const list = card.querySelector('.ring-options-list');
+        const row = document.createElement('div');
+        row.className = 'ring-option-row';
+        row.innerHTML = `
+          <input class="ring-option-input" placeholder="新选项" value="">
+          <button class="btn-remove-option">×</button>
+        `;
+        list.appendChild(row);
+        this.updateRemoveButtons(card);
+
+        // 绑定新按钮
+        row.querySelector('.btn-remove-option').addEventListener('click', () => {
+          const rows = card.querySelectorAll('.ring-option-row');
+          if (rows.length > 2) { row.remove(); this.updateRemoveButtons(card); }
+          else this.toast('⚠️ 每圈至少需要2个选项');
+        });
+      });
+    });
+  },
+
+  updateRemoveButtons(card) {
+    const rows = card.querySelectorAll('.ring-option-row');
+    rows.forEach(row => {
+      const btn = row.querySelector('.btn-remove-option');
+      if (rows.length <= 2) {
+        if (btn) btn.style.display = 'none';
+      } else {
+        if (btn) btn.style.display = '';
+      }
+    });
+  },
+
+  /* ========================================
+     旋转页渲染（阶段4/5将增强）
+     ======================================== */
+  renderSpinner(wheel) {
+    const container = document.getElementById('spinnerContent');
+    const size = Math.min(window.innerWidth - 40, window.innerHeight * 0.5);
+    const style = WHEEL_STYLES[wheel.style] || WHEEL_STYLES.strawberry;
+
+    // 更新背景渐变
+    document.body.style.background = style.bgGradient;
+
+    container.innerHTML = `
+      <div class="wheel-wrapper" id="wheelWrapper">
+        <div class="wheel-pointer">${style.pointer}</div>
+        <canvas class="wheel-canvas" id="wheelCanvas"
+                width="${size * 2}" height="${size * 2}"
+                style="width:${size}px;height:${size}px;">
+        </canvas>
+      </div>
+      <p class="spin-info">${style.emoji} ${style.name} · ${wheel.rings.length} 圈 · ${wheel.rings.reduce((s,r) => s + r.options.length, 0)} 个选项</p>
+      <button class="btn btn-primary" id="btnSpin" style="width:80%;max-width:300px;">
+        ✨ 开始旋转！
+      </button>
+    `;
+
+    this.drawStaticWheel(wheel, size);
+    this.currentAngle = 0;
+
+    // 旋转按钮事件（阶段5将替换为真实动画）
+    document.getElementById('btnSpin').addEventListener('click', () => {
+      if (this.isSpinning) return;
+      this.isSpinning = true;
+      const btn = document.getElementById('btnSpin');
+      btn.textContent = '🎡 旋转中...';
+      btn.style.opacity = '0.6';
+      btn.style.pointerEvents = 'none';
+
+      // 模拟旋转动画（阶段5替换为真实Canvas动画）
+      this.simulateSpin(wheel, size, () => {
+        this.isSpinning = false;
+        btn.textContent = '✨ 开始旋转！';
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      });
+    });
+  },
+
+  /* ---- 静态转盘绘制（占位，阶段4重写） ---- */
+  drawStaticWheel(wheel, size) {
+    const canvas = document.getElementById('wheelCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const style = WHEEL_STYLES[wheel.style] || WHEEL_STYLES.strawberry;
+    this._drawWheel(ctx, size, wheel, 0, style);
+  },
+
+  /* ---- 共享绘制函数 ---- */
+  _drawWheel(ctx, size, wheel, angle, style) {
+    const cx = size, cy = size;
+    const maxR = size * 0.88;
+    const ringWidth = (maxR - size * 0.05) / wheel.rings.length;
+
+    ctx.clearRect(0, 0, size * 2, size * 2);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.translate(-cx, -cy);
+
+    wheel.rings.forEach((ring, ri) => {
+      const outerR = maxR - (ri * ringWidth);
+      const innerR = outerR - ringWidth + 3;
+      const sliceAngle = (2 * Math.PI) / ring.options.length;
+
+      ring.options.forEach((opt, oi) => {
+        const startAngle = oi * sliceAngle - Math.PI / 2;
+        const endAngle = startAngle + sliceAngle;
+
+        ctx.fillStyle = style.colors[(oi + ri * 3) % style.colors.length];
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerR, startAngle, endAngle);
+        ctx.arc(cx, cy, innerR, endAngle, startAngle, true);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = style.borderColor;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        const textAngle = startAngle + sliceAngle / 2;
+        ctx.rotate(textAngle);
+        ctx.fillStyle = style.textColor;
+        ctx.font = `bold ${Math.max(11, ringWidth * 0.38)}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-stack')}`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const textR = innerR + (outerR - innerR) / 2;
+        const text = opt.length > 6 ? opt.slice(0,5) + '..' : opt;
+        ctx.fillText(text, textR, 0);
+        ctx.restore();
+      });
+    });
+
+    // 中心装饰圆
+    const centerR = size * 0.05;
+    const grad = ctx.createRadialGradient(cx, cy, centerR*0.3, cx, cy, centerR);
+    grad.addColorStop(0, '#FFFFFF');
+    grad.addColorStop(1, style.centerColor);
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, centerR, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.restore();
+  },  /* ---- 模拟旋转（占位，阶段5替换） ---- */
+  simulateSpin(wheel, size, callback) {
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const cx = size, cy = size;
+    const totalRotation = (5 + Math.random() * 6) * Math.PI * 2 + Math.random() * Math.PI * 2;
+    const duration = 4000 + Math.random() * 1000;
+    const startTime = performance.now();
+    const startAngle = this.currentAngle;
+
+    // 音效初始化
+    AudioEngine.ensure();
+    let lastTickAngle = startAngle;
+    const tickThreshold = (2 * Math.PI) / 14;
+
+    const animate = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const angle = startAngle + totalRotation * eased;
+
+      // 刻度音：每过一个阈值触发
+      if (Math.abs(angle - lastTickAngle) >= tickThreshold) {
+        AudioEngine.tick();
+        lastTickAngle = angle;
+      }
+
+      const style = WHEEL_STYLES[wheel.style] || WHEEL_STYLES.strawberry;
+      this._drawWheel(ctx, size, wheel, angle, style);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        this.currentAngle = angle % (2 * Math.PI);
+        AudioEngine.fanfare();
+        this.showResult(wheel, angle);
+        Confetti.fire();
+        callback();
+      }
+    };
+    requestAnimationFrame(animate);
+  },
+
+  /* ---- 结果显示 ---- */
+  showResult(wheel, finalAngle) {
+    const list = document.getElementById('resultList');
+    // 计算每圈结果
+    let html = '';
+    // 标准化角度到 [0, 2π)
+    let angle = ((finalAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    // 指针在12点钟方向（顶部），即 -π/2 位置
+    // 转盘旋转了angle，所以指针相对于转盘命中的是 -π/2 - angle 位置
+    const pointerRel = ((-Math.PI / 2 - angle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+
+    wheel.rings.forEach((ring, ri) => {
+      const sliceAngle = (2 * Math.PI) / ring.options.length;
+      // 指针在12点方向，转盘旋转angle后，计算指针落在哪个扇区
+      const hitIndex = Math.floor(pointerRel / sliceAngle) % ring.options.length;
+      const result = ring.options[hitIndex];
+
+      html += `
+        <div class="result-item">
+          <span class="result-ring-name">${this.escapeHtml(ring.name)}</span>
+          <span class="result-ring-value">${this.escapeHtml(result)}</span>
+        </div>
+      `;
+    });
+
+    list.innerHTML = html;
+    document.getElementById('modalResult').classList.add('active');
+
+    // 触发触觉反馈
+    if (navigator.vibrate) {
+      navigator.vibrate([15, 50, 15, 50, 30]);
+    }
+  },
+
+  /* ---- 工具方法 ---- */
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+};
+
+/* ---- 启动应用 ---- */
+document.addEventListener('DOMContentLoaded', () => App.init());
+
+/* ---- PWA Service Worker ---- */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
+/* ---- 窗口尺寸变化时刷新旋转页 ---- */
+window.addEventListener('resize', () => {
+  if (App.currentView === 'spinner' && App.currentWheelId) {
+    const wheels = App.loadWheels();
+    const wheel = wheels.find(w => w.id === App.currentWheelId);
+    if (wheel) App.renderSpinner(wheel);
+  }
+});
+</script>
+</body>
+</html>

@@ -9,19 +9,10 @@
 <title>🎡 甜心转盘</title>
 <style>
 /* ============================================
-   设计系统变量 — 参照 docs/design-system.md
+   设计系统变量
    ============================================ */
 :root {
-  /* 主色板（草莓甜心） */
-  --pink-primary:    #FF8FA3;
-  --pink-light:      #FFD1DC;
-  --pink-bg:         #FFF5F5;
-  --pink-deep:       #E87A8F;
-  --mint-accent:     #C8E6C9;
-  --warm-gray:       #8D6E7F;
-  --white:           #FFFFFF;
-
-  /* 字体 */
+  /* 字体/尺寸/圆角/间距 — 所有主题共用 */
   --font-stack: system-ui, -apple-system, 'Segoe UI', 'PingFang SC',
                 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
   --font-xs:    12px;
@@ -30,34 +21,87 @@
   --font-lg:    22px;
   --font-xl:    28px;
   --font-xxl:   36px;
-
-  /* 圆角 */
   --radius-xs:   8px;
   --radius-sm:  12px;
   --radius-md:  16px;
   --radius-lg:  24px;
   --radius-xl:  50px;
-
-  /* 间距 */
   --space-xs:   4px;
   --space-sm:   8px;
   --space-md:  16px;
   --space-lg:  24px;
   --space-xl:  32px;
   --space-xxl: 48px;
-
-  /* 阴影 */
-  --shadow-card:    0 4px 20px rgba(255, 143, 163, 0.20);
-  --shadow-button:  0 6px 24px rgba(255, 143, 163, 0.35);
-  --shadow-pressed: 0 2px 8px rgba(255, 143, 163, 0.30);
-  --shadow-modal:   0 12px 48px rgba(0, 0, 0, 0.12);
-  --shadow-wheel:   0 8px 32px rgba(255, 143, 163, 0.30),
-                    0 2px 8px rgba(255, 143, 163, 0.15);
-
-  /* 动画 */
   --ease-out:     cubic-bezier(0, 0, 0.2, 1);
   --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-spin:    cubic-bezier(0.15, 0.80, 0.30, 0.98);
+
+  /* 🍓 甜心糖果主题（默认） */
+  --primary:       #FF8FA3;
+  --primary-light: #FFD1DC;
+  --bg-start:      #FFF5F5;
+  --bg-end:        #FFD1DC;
+  --primary-deep:  #E87A8F;
+  --text-color:    #8D6E7F;
+  --text-secondary:#C0909F;
+  --card-bg:       #FFFFFF;
+  --card-border:   #FFD1DC;
+  --btn-bg:        linear-gradient(135deg, #FF8FA3, #E87A8F);
+  --btn-text:      #FFFFFF;
+  --input-border:  #FFD1DC;
+  --shadow-card:   0 4px 20px rgba(255, 143, 163, 0.20);
+  --shadow-button: 0 6px 24px rgba(255, 143, 163, 0.35);
+  --shadow-pressed:0 2px 8px rgba(255, 143, 163, 0.30);
+  --shadow-modal:  0 12px 48px rgba(0, 0, 0, 0.12);
+  --shadow-wheel:  0 8px 32px rgba(255, 143, 163, 0.30), 0 2px 8px rgba(255, 143, 163, 0.15);
+  --deco-opacity:  0.15;
+  --divider:       rgba(255,143,163,0.15);
+}
+
+/* 🌃 幻夜炫酷主题 */
+[data-theme="cyber"] {
+  --primary:       #b347ea;
+  --primary-light: #7b2ff7;
+  --bg-start:      #0a0a1a;
+  --bg-end:        #120825;
+  --primary-deep:  #d45dff;
+  --text-color:    #c8c8d8;
+  --text-secondary:#8878a8;
+  --card-bg:       rgba(20, 16, 40, 0.92);
+  --card-border:   #b347ea;
+  --btn-bg:        linear-gradient(135deg, #b347ea, #7b2ff7);
+  --btn-text:      #FFFFFF;
+  --input-border:  #b347ea;
+  --shadow-card:   0 4px 24px rgba(179,71,234,0.25), 0 0 0 1px rgba(179,71,234,0.15);
+  --shadow-button: 0 6px 30px rgba(179,71,234,0.45), 0 0 20px rgba(179,71,234,0.2);
+  --shadow-pressed:0 2px 10px rgba(179,71,234,0.35);
+  --shadow-modal:  0 12px 48px rgba(0,0,0,0.5);
+  --shadow-wheel:  0 8px 40px rgba(179,71,234,0.4), 0 0 30px rgba(123,47,247,0.25);
+  --deco-opacity:  0.2;
+  --divider:       rgba(179,71,234,0.2);
+}
+
+/* 🤍 简约素净主题 */
+[data-theme="minimal"] {
+  --primary:       #444444;
+  --primary-light: #cccccc;
+  --bg-start:      #fafafa;
+  --bg-end:        #f0f0f0;
+  --primary-deep:  #222222;
+  --text-color:    #666666;
+  --text-secondary:#999999;
+  --card-bg:       #FFFFFF;
+  --card-border:   #e0e0e0;
+  --btn-bg:        #444444;
+  --btn-text:      #FFFFFF;
+  --input-border:  #d0d0d0;
+  --shadow-card:   0 2px 12px rgba(0,0,0,0.06);
+  --shadow-button: 0 4px 16px rgba(0,0,0,0.1);
+  --shadow-pressed:0 1px 4px rgba(0,0,0,0.08);
+  --shadow-modal:  0 8px 40px rgba(0,0,0,0.1);
+  --shadow-wheel:  0 4px 20px rgba(0,0,0,0.08);
+  --deco-opacity:  0.06;
+  --divider:       rgba(0,0,0,0.06);
 }
 
 /* ============================================
@@ -79,8 +123,8 @@ body {
   font-family: var(--font-stack);
   font-size: var(--font-sm);
   font-weight: 400;
-  color: var(--warm-gray);
-  background: linear-gradient(180deg, var(--pink-bg) 0%, var(--pink-light) 100%);
+  color: var(--text-color);
+  background: linear-gradient(180deg, var(--bg-start) 0%, var(--primary-light) 100%);
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
@@ -132,15 +176,37 @@ body {
 .page-title {
   font-size: var(--font-xl);
   font-weight: 700;
-  color: var(--pink-primary);
+  color: var(--primary);
   margin-bottom: var(--space-xs);
 }
 
 .page-subtitle {
   font-size: var(--font-sm);
-  color: var(--pink-light);
+  color: var(--primary-light);
   font-weight: 400;
 }
+
+/* 主题切换器 */
+.theme-switcher {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.theme-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  position: relative;
+}
+.theme-dot:active { transform: scale(0.9); }
+.theme-dot.active { border-color: var(--text-color); box-shadow: 0 0 0 3px var(--divider); }
+.theme-dot.candy  { background: linear-gradient(135deg, #FF8FA3, #FFD1DC); }
+.theme-dot.cyber  { background: linear-gradient(135deg, #b347ea, #0a0a1a); }
+.theme-dot.minimal { background: linear-gradient(135deg, #888, #f0f0f0); }
 
 /* ============================================
    头部导航栏
@@ -157,7 +223,7 @@ body {
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: var(--white);
+  background: var(--card-bg);
   box-shadow: var(--shadow-card);
   font-size: 18px;
   cursor: pointer;
@@ -175,7 +241,7 @@ body {
 .nav-title {
   font-size: var(--font-lg);
   font-weight: 700;
-  color: var(--pink-primary);
+  color: var(--primary);
 }
 
 /* ============================================
@@ -203,8 +269,8 @@ body {
 
 /* 主按钮 */
 .btn-primary {
-  background: linear-gradient(135deg, var(--pink-primary), var(--pink-deep));
-  color: var(--white);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   font-size: 18px;
   height: 56px;
   padding: 0 var(--space-xl);
@@ -215,7 +281,7 @@ body {
 
 @keyframes btnBreathe {
   0%, 100% { box-shadow: var(--shadow-button); }
-  50%      { box-shadow: 0 6px 32px rgba(255, 143, 163, 0.50); }
+  50%      { box-shadow: var(--shadow-button), 0 0 24px var(--primary); }
 }
 
 .btn-primary:active {
@@ -225,12 +291,12 @@ body {
 
 /* 次要按钮 */
 .btn-secondary {
-  background: var(--white);
-  color: var(--pink-primary);
+  background: var(--card-bg);
+  color: var(--primary);
   font-size: var(--font-md);
   height: 48px;
   padding: 0 var(--space-lg);
-  border: 2px solid var(--pink-light);
+  border: 2px solid var(--primary-light);
   box-shadow: var(--shadow-card);
 }
 
@@ -248,8 +314,8 @@ body {
   padding: 0;
   border-radius: 50%;
   font-size: 18px;
-  background: var(--pink-light);
-  color: var(--pink-primary);
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 .card-edit-btn {
@@ -267,7 +333,7 @@ body {
 
 .btn-danger {
   background: #FF5252;
-  color: var(--white);
+  color: var(--card-bg);
 }
 
 /* 浮动操作按钮 */
@@ -356,12 +422,12 @@ body {
 .empty-title {
   font-size: var(--font-lg);
   font-weight: 700;
-  color: var(--pink-primary);
+  color: var(--primary);
 }
 
 .empty-desc {
   font-size: var(--font-sm);
-  color: var(--pink-primary);
+  color: var(--primary);
   opacity: 0.7;
   line-height: 1.6;
 }
@@ -376,7 +442,7 @@ body {
 }
 
 .wheel-card {
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-card);
@@ -416,7 +482,7 @@ body {
 .wheel-card-name {
   font-size: var(--font-md);
   font-weight: 600;
-  color: var(--warm-gray);
+  color: var(--text-color);
   margin-bottom: var(--space-xs);
   white-space: nowrap;
   overflow: hidden;
@@ -425,13 +491,13 @@ body {
 
 .wheel-card-meta {
   font-size: var(--font-xs);
-  color: var(--pink-primary);
+  color: var(--primary);
   opacity: 0.7;
 }
 
 .wheel-card-arrow {
   font-size: 20px;
-  color: var(--pink-light);
+  color: var(--primary-light);
   flex-shrink: 0;
 }
 
@@ -455,29 +521,29 @@ body {
 .form-label {
   font-size: var(--font-sm);
   font-weight: 600;
-  color: var(--pink-primary);
+  color: var(--primary);
 }
 
 .form-input {
   height: 48px;
-  border: 2px solid var(--pink-light);
+  border: 2px solid var(--primary-light);
   border-radius: var(--radius-sm);
   padding: 0 var(--space-md);
   font-family: var(--font-stack);
   font-size: var(--font-md);
-  color: var(--warm-gray);
-  background: var(--white);
+  color: var(--text-color);
+  background: var(--card-bg);
   outline: none;
   transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 
 .form-input:focus {
-  border-color: var(--pink-primary);
-  box-shadow: 0 0 0 4px rgba(255, 143, 163, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--divider);
 }
 
 .form-input::placeholder {
-  color: var(--pink-light);
+  color: var(--primary-light);
 }
 
 /* 圈数选择器 */
@@ -485,7 +551,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   box-shadow: var(--shadow-card);
@@ -495,7 +561,7 @@ body {
   flex: 1;
   font-size: var(--font-sm);
   font-weight: 600;
-  color: var(--warm-gray);
+  color: var(--text-color);
 }
 
 .ring-count-controls {
@@ -507,7 +573,7 @@ body {
 .ring-count-value {
   font-size: var(--font-xl);
   font-weight: 700;
-  color: var(--pink-primary);
+  color: var(--primary);
   min-width: 32px;
   text-align: center;
 }
@@ -520,7 +586,7 @@ body {
 }
 
 .ring-editor-card {
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   box-shadow: var(--shadow-card);
@@ -543,12 +609,12 @@ body {
 .ring-editor-name {
   flex: 1;
   height: 36px;
-  border: 1px solid var(--pink-light);
+  border: 1px solid var(--primary-light);
   border-radius: var(--radius-xs);
   padding: 0 var(--space-sm);
   font-size: var(--font-sm);
   font-family: var(--font-stack);
-  color: var(--warm-gray);
+  color: var(--text-color);
   font-weight: 600;
 }
 
@@ -567,12 +633,12 @@ body {
 .ring-option-input {
   flex: 1;
   height: 40px;
-  border: 1px solid var(--pink-light);
+  border: 1px solid var(--primary-light);
   border-radius: var(--radius-xs);
   padding: 0 var(--space-sm);
   font-size: var(--font-sm);
   font-family: var(--font-stack);
-  color: var(--warm-gray);
+  color: var(--text-color);
 }
 
 .btn-remove-option {
@@ -594,11 +660,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  border: 1px dashed var(--pink-light);
+  border: 1px dashed var(--primary-light);
   border-radius: var(--radius-xs);
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-xs);
-  color: var(--pink-primary);
+  color: var(--primary);
   background: transparent;
   cursor: pointer;
   font-family: var(--font-stack);
@@ -613,7 +679,7 @@ body {
 
 .style-card {
   flex: 1;
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   text-align: center;
@@ -624,8 +690,8 @@ body {
 }
 
 .style-card.selected {
-  border-color: var(--pink-primary);
-  box-shadow: 0 0 0 4px rgba(255, 143, 163, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--divider);
 }
 
 .style-card-emoji {
@@ -636,7 +702,7 @@ body {
 .style-card-name {
   font-size: var(--font-xs);
   font-weight: 600;
-  color: var(--warm-gray);
+  color: var(--text-color);
 }
 
 /* 模板按钮 */
@@ -650,13 +716,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  background: var(--white);
-  border: 2px solid var(--pink-light);
+  background: var(--card-bg);
+  border: 2px solid var(--primary-light);
   border-radius: var(--radius-xl);
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-xs);
   font-weight: 600;
-  color: var(--pink-primary);
+  color: var(--primary);
   cursor: pointer;
   font-family: var(--font-stack);
   box-shadow: var(--shadow-card);
@@ -664,7 +730,7 @@ body {
 }
 
 .btn-template:active {
-  background: var(--pink-bg);
+  background: var(--bg-start);
   transform: scale(0.96);
 }
 
@@ -707,7 +773,7 @@ body {
 /* 旋转信息 */
 .spin-info {
   text-align: center;
-  color: var(--pink-primary);
+  color: var(--primary);
   font-size: var(--font-sm);
   opacity: 0.7;
 }
@@ -730,7 +796,7 @@ body {
 }
 
 .modal-sheet {
-  background: var(--white);
+  background: var(--card-bg);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   width: 100%;
   max-width: 480px;
@@ -747,7 +813,7 @@ body {
 .modal-handle {
   width: 36px;
   height: 4px;
-  background: var(--pink-light);
+  background: var(--primary-light);
   border-radius: 2px;
   margin: 0 auto var(--space-lg);
 }
@@ -756,7 +822,7 @@ body {
   text-align: center;
   font-size: var(--font-lg);
   font-weight: 700;
-  color: var(--pink-primary);
+  color: var(--primary);
   margin-bottom: var(--space-lg);
 }
 
@@ -771,7 +837,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  background: var(--pink-bg);
+  background: var(--bg-start);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   animation: resultStagger 200ms var(--ease-out) both;
@@ -791,7 +857,7 @@ body {
 
 .result-ring-name {
   font-size: var(--font-xs);
-  color: var(--pink-primary);
+  color: var(--primary);
   opacity: 0.7;
   font-weight: 600;
   min-width: 56px;
@@ -800,7 +866,7 @@ body {
 .result-ring-value {
   font-size: var(--font-md);
   font-weight: 700;
-  color: var(--warm-gray);
+  color: var(--text-color);
   flex: 1;
 }
 
@@ -836,7 +902,7 @@ body {
 
 .deco {
   position: absolute;
-  opacity: 0.15;
+  opacity: var(--deco-opacity);
   animation: decoFloat 8s ease-in-out infinite;
 }
 
@@ -860,8 +926,8 @@ body {
   top: var(--space-lg);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--warm-gray);
-  color: var(--white);
+  background: var(--text-color);
+  color: var(--card-bg);
   padding: var(--space-sm) var(--space-lg);
   border-radius: var(--radius-xl);
   font-size: var(--font-sm);
@@ -900,6 +966,11 @@ body {
     <div class="page-header">
       <h1 class="page-title">🎡 甜心转盘</h1>
       <p class="page-subtitle">转一转，帮你做决定~</p>
+      <div class="theme-switcher" id="themeSwitcher">
+        <span class="theme-dot candy active" data-theme="candy" title="甜心糖果"></span>
+        <span class="theme-dot cyber" data-theme="cyber" title="幻夜炫酷"></span>
+        <span class="theme-dot minimal" data-theme="minimal" title="简约素净"></span>
+      </div>
     </div>
     <div class="home-content" id="homeContent">
       <!-- 由 JS 动态渲染 -->
@@ -1093,57 +1164,73 @@ const Confetti = {
    ============================================ */
 const WHEEL_STYLES = {
   strawberry: {
-    name: '草莓甜心',
-    emoji: '🍓',
-    bgGradient: 'linear-gradient(180deg, #FFF5F5 0%, #FFD1DC 100%)',
-    colors: [
-      '#FFB5C2','#FFD1DC','#FFABAB','#FFC8D6',
-      '#FFE0E5','#FF9CB0','#FFC2D0','#FFDDE5',
-      '#FFBFC9','#FFD6E0','#FFAAA8','#FFC8D0',
-      '#FFE5EA','#FFBAD0','#FFD0DA','#FFCCD5',
-      '#FF9FB5','#FFD8E2','#FFB8C8','#FFE2E8'
-    ],
-    borderColor: 'rgba(255,255,255,0.6)',
-    textColor: '#8D6E7F',
-    centerColor: '#FFD1DC',
-    pointer: '🎀',
-    decoration: '🍓'
+    name: '草莓甜心', emoji: '🍓', pointer: '🎀', decoration: '🍓',
+    themes: {
+      candy: {
+        bgGradient: 'linear-gradient(180deg, #FFF5F5 0%, #FFD1DC 100%)',
+        colors: ['#FFB5C2','#FFD1DC','#FFABAB','#FFC8D6','#FFE0E5','#FF9CB0','#FFC2D0','#FFDDE5','#FFBFC9','#FFD6E0','#FFAAA8','#FFC8D0','#FFE5EA','#FFBAD0','#FFD0DA','#FFCCD5','#FF9FB5','#FFD8E2','#FFB8C8','#FFE2E8'],
+        borderColor: 'rgba(255,255,255,0.6)', textColor: '#8D6E7F', centerColor: '#FFD1DC'
+      },
+      cyber: {
+        bgGradient: 'linear-gradient(180deg, #0a0a1a 0%, #120825 100%)',
+        colors: ['#ff6b9d','#c44dff','#ff4081','#b347ea','#ff5177','#d45dff','#ff3d6f','#9b30ff','#ff6b9d','#c44dff','#ff4081','#b347ea','#ff5177','#d45dff','#ff3d6f','#9b30ff','#ff6b9d','#c44dff','#ff4081','#b347ea'],
+        borderColor: 'rgba(255,255,255,0.2)', textColor: '#e0c8f0', centerColor: '#b347ea'
+      },
+      minimal: {
+        bgGradient: 'linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%)',
+        colors: ['#e8d5d5','#f0e0e0','#e5d0d0','#edd8d8','#e8d0d0','#f0e5e5','#e5d8d8','#edd0d0','#e8d8d8','#f0d8d8','#e5d5d5','#ede0e0','#e8d2d2','#f0dddd','#e5d0d0','#edd5d5','#e8d5d5','#f0e0e0','#e5d8d8','#edd8d8'],
+        borderColor: 'rgba(0,0,0,0.08)', textColor: '#999', centerColor: '#e0d5d5'
+      }
+    }
   },
   sakura: {
-    name: '樱花物语',
-    emoji: '🌸',
-    bgGradient: 'linear-gradient(180deg, #FFF0F5 0%, #E8D5F5 100%)',
-    colors: [
-      '#FFB7C5','#FFD6E0','#E8D5F5','#FFC2D0',
-      '#F5E0EB','#FFC8D8','#E0D0F0','#FFD4DE',
-      '#F0DDF5','#FFBFC9','#E5D8F2','#FFD0DA',
-      '#EDD8F0','#FFC5D2','#E2D5EE','#FFCCD8',
-      '#F0E0F5','#FFBAD0','#E8DCF3','#FFD8E2'
-    ],
-    borderColor: 'rgba(255,255,255,0.5)',
-    textColor: '#8D7E8F',
-    centerColor: '#E8D5F5',
-    pointer: '🌸',
-    decoration: '🌸'
+    name: '樱花物语', emoji: '🌸', pointer: '🌸', decoration: '🌸',
+    themes: {
+      candy: {
+        bgGradient: 'linear-gradient(180deg, #FFF0F5 0%, #E8D5F5 100%)',
+        colors: ['#FFB7C5','#FFD6E0','#E8D5F5','#FFC2D0','#F5E0EB','#FFC8D8','#E0D0F0','#FFD4DE','#F0DDF5','#FFBFC9','#E5D8F2','#FFD0DA','#EDD8F0','#FFC5D2','#E2D5EE','#FFCCD8','#F0E0F5','#FFBAD0','#E8DCF3','#FFD8E2'],
+        borderColor: 'rgba(255,255,255,0.5)', textColor: '#8D7E8F', centerColor: '#E8D5F5'
+      },
+      cyber: {
+        bgGradient: 'linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 100%)',
+        colors: ['#00e5ff','#b347ea','#00d4ff','#c44dff','#00c8ff','#d45dff','#00b8ff','#9b30ff','#00e5ff','#b347ea','#00d4ff','#c44dff','#00c8ff','#d45dff','#00b8ff','#9b30ff','#00e5ff','#b347ea','#00d4ff','#c44dff'],
+        borderColor: 'rgba(255,255,255,0.2)', textColor: '#b8d8f0', centerColor: '#7b2ff7'
+      },
+      minimal: {
+        bgGradient: 'linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%)',
+        colors: ['#d8d8e8','#e8e8f0','#dddde5','#e5e5ed','#d8dde5','#e8e5f0','#ddd8e8','#e5e0ed','#d8e0e8','#e8e8f0','#dddde8','#e5e5f0','#d8dde8','#e8e5ed','#ddd8e5','#e5e0f0','#d8e0ed','#e8e8f0','#dddde5','#e5e5ed'],
+        borderColor: 'rgba(0,0,0,0.08)', textColor: '#999', centerColor: '#e0dde8'
+      }
+    }
   },
   cake: {
-    name: '甜心蛋糕',
-    emoji: '🎀',
-    bgGradient: 'linear-gradient(180deg, #FFF5F0 0%, #FFF3C4 40%, #D5C6F0 100%)',
-    colors: [
-      '#FF9CB0','#FFF3C4','#D5C6F0','#FFABBC',
-      '#FFE8B0','#D8C8F0','#FFB5C5','#FFEDC0',
-      '#D0C0EC','#FFA0B5','#FFF0C8','#DCCAF2',
-      '#FFB8C8','#FFE5B8','#D4C4EE','#FFA8BA',
-      '#FFECC4','#D8CCF0','#FFB0C0','#FFEABC'
-    ],
-    borderColor: 'rgba(255,255,255,0.55)',
-    textColor: '#8D7E7F',
-    centerColor: '#FFF3C4',
-    pointer: '🕯️',
-    decoration: '🧁'
+    name: '甜心蛋糕', emoji: '🎀', pointer: '🕯️', decoration: '🧁',
+    themes: {
+      candy: {
+        bgGradient: 'linear-gradient(180deg, #FFF5F0 0%, #FFF3C4 40%, #D5C6F0 100%)',
+        colors: ['#FF9CB0','#FFF3C4','#D5C6F0','#FFABBC','#FFE8B0','#D8C8F0','#FFB5C5','#FFEDC0','#D0C0EC','#FFA0B5','#FFF0C8','#DCCAF2','#FFB8C8','#FFE5B8','#D4C4EE','#FFA8BA','#FFECC4','#D8CCF0','#FFB0C0','#FFEABC'],
+        borderColor: 'rgba(255,255,255,0.55)', textColor: '#8D7E7F', centerColor: '#FFF3C4'
+      },
+      cyber: {
+        bgGradient: 'linear-gradient(180deg, #0a0a1a 0%, #1a0f0a 50%, #1a0a2e 100%)',
+        colors: ['#ffab00','#c44dff','#ff9100','#b347ea','#ffa000','#d45dff','#ff8f00','#9b30ff','#ffab00','#c44dff','#ff9100','#b347ea','#ffa000','#d45dff','#ff8f00','#9b30ff','#ffab00','#c44dff','#ff9100','#b347ea'],
+        borderColor: 'rgba(255,255,255,0.2)', textColor: '#e0d0b8', centerColor: '#ffab00'
+      },
+      minimal: {
+        bgGradient: 'linear-gradient(180deg, #fafafa 0%, #f5f0e8 40%, #f0e8f0 100%)',
+        colors: ['#e8ddd5','#f0e8e0','#e8dde8','#edd8d5','#f0e5d8','#e8dde0','#edd5d8','#f0e8dd','#e8e0d8','#edd8dd','#f0e0d5','#e8dde5','#edd5e0','#f0e5d8','#e8d8dd','#eddde0','#e8e0dd','#f0e0d8','#edd8e0','#f0e5dd'],
+        borderColor: 'rgba(0,0,0,0.08)', textColor: '#999', centerColor: '#e8ddd5'
+      }
+    }
   }
 };
+
+/* 获取当前主题下的样式配置 */
+function getWheelTheme(styleName) {
+  const theme = document.documentElement.getAttribute('data-theme') || 'candy';
+  const style = WHEEL_STYLES[styleName] || WHEEL_STYLES.strawberry;
+  return { ...style, ...style.themes[theme] };
+}
 
 /* ============================================
    快速模板
@@ -1235,12 +1322,35 @@ const App = {
 
   /* ---- 初始化 ---- */
   init() {
+    this.loadTheme();
     this.renderHome();
     this.bindEvents();
   },
 
+  /* ---- 主题管理 ---- */
+  loadTheme() {
+    const saved = localStorage.getItem('sweet-wheel-theme') || 'candy';
+    this.setTheme(saved);
+  },
+
+  setTheme(name) {
+    document.documentElement.setAttribute('data-theme', name);
+    localStorage.setItem('sweet-wheel-theme', name);
+    document.querySelectorAll('#themeSwitcher .theme-dot').forEach(d => {
+      d.classList.toggle('active', d.dataset.theme === name);
+    });
+    // 更新 meta theme-color
+    const colors = { candy: '#FF8FA3', cyber: '#0a0a1a', minimal: '#fafafa' };
+    document.querySelector('meta[name="theme-color"]').content = colors[name] || '#FF8FA3';
+  },
+
   /* ---- 事件绑定 ---- */
   bindEvents() {
+    // 主题切换
+    document.querySelectorAll('#themeSwitcher .theme-dot').forEach(dot => {
+      dot.addEventListener('click', () => this.setTheme(dot.dataset.theme));
+    });
+
     // 新建转盘
     document.getElementById('btnNewWheel').addEventListener('click', () => {
       this.currentWheelId = null;
@@ -1441,15 +1551,15 @@ const App = {
 
       <div class="form-group">
         <label class="form-label">⏱️ 旋转时长（秒）</label>
-        <div style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:var(--radius-md);padding:14px 18px;box-shadow:var(--shadow-card);">
+        <div style="display:flex;align-items:center;gap:12px;background:var(--card-bg);border-radius:var(--radius-md);padding:14px 18px;box-shadow:var(--shadow-card);">
           <input type="number" id="inputDuration" value="${wheelData?.spinDuration || 4}"
                  min="0.5" step="0.5" max="30"
-                 style="flex:1;height:48px;border:2px solid var(--pink-light);border-radius:12px;padding:0 14px;font-size:18px;font-weight:700;color:var(--pink-primary);text-align:center;font-family:var(--font-stack);outline:none;"
-                 onfocus="this.style.borderColor='var(--pink-primary)';this.style.boxShadow='0 0 0 4px rgba(255,143,163,0.15)'"
-                 onblur="this.style.borderColor='var(--pink-light)';this.style.boxShadow='none';if(this.value<0.5)this.value=0.5">
-          <span style="font-size:16px;font-weight:600;color:var(--warm-gray);white-space:nowrap;">秒/圈</span>
+                 style="flex:1;height:48px;border:2px solid var(--primary-light);border-radius:12px;padding:0 14px;font-size:18px;font-weight:700;color:var(--primary);text-align:center;font-family:var(--font-stack);outline:none;"
+                 onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 4px rgba(255,143,163,0.15)'"
+                 onblur="this.style.borderColor='var(--primary-light)';this.style.boxShadow='none';if(this.value<0.5)this.value=0.5">
+          <span style="font-size:16px;font-weight:600;color:var(--text-color);white-space:nowrap;">秒/圈</span>
         </div>
-        <span style="font-size:11px;color:var(--pink-primary);opacity:0.6;margin-top:4px;">💡 最短 0.5 秒，数字越小转得越快</span>
+        <span style="font-size:11px;color:var(--primary);opacity:0.6;margin-top:4px;">💡 最短 0.5 秒，数字越小转得越快</span>
       </div>
 
       <button class="btn btn-primary" style="width:100%;margin-top:var(--space-md);" id="btnSaveWheel">
@@ -1650,7 +1760,7 @@ const App = {
   renderSpinner(wheel) {
     const container = document.getElementById('spinnerContent');
     const size = Math.min(window.innerWidth - 40, window.innerHeight * 0.5);
-    const style = WHEEL_STYLES[wheel.style] || WHEEL_STYLES.strawberry;
+    const style = getWheelTheme(wheel.style);
 
     // 更新背景渐变
     document.body.style.background = style.bgGradient;
@@ -1705,7 +1815,7 @@ const App = {
     const canvas = document.getElementById('wheelCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const style = WHEEL_STYLES[wheel.style] || WHEEL_STYLES.strawberry;
+    const style = getWheelTheme(wheel.style);
     this._drawWheel(ctx, size, wheel, 0, style);
   },
 
@@ -1798,7 +1908,7 @@ const App = {
         lastTickAngle = angle;
       }
 
-      const style = WHEEL_STYLES[wheel.style] || WHEEL_STYLES.strawberry;
+      const style = getWheelTheme(wheel.style);
       this._drawWheel(ctx, size, wheel, angle, style);
 
       if (progress < 1) {

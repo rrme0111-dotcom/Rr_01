@@ -443,7 +443,7 @@ body {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 3px solid #FFD1DC;
+  border: 3px solid #FFF0E6;
   background: conic-gradient(
     #FFB5C2 0deg 60deg, #FFF5F5 60deg 120deg,
     #FFABAB 120deg 180deg, #FFF5F5 180deg 240deg,
@@ -1220,7 +1220,7 @@ const Confetti = {
 
     const theme = document.documentElement.getAttribute('data-theme') || 'candy';
     const palettes = {
-      candy: ['#FF8FA3','#FFD1DC','#FFB7C5','#FF9CB0','#FFF5F5','#FFABAB','#FFC8D6','#FFE082'],
+      candy: ['#FFAB76','#FFF0E6','#FFCC80','#FF9CB0','#FFF5F5','#FFABAB','#FFC8D6','#FFE082'],
       cyber: ['#b347ea','#7b2ff7','#d45dff','#9b30ff','#c44dff','#ff9100','#ffab00','#ffa000'],
       minimal: ['#888','#aaa','#999','#bbb','#777','#ccc','#ddd','#eee']
     };
@@ -1292,9 +1292,9 @@ const WHEEL_STYLES = {
     name: '草莓甜心', emoji: '🍓', pointer: '🎀', decoration: '🍓',
     themes: {
       candy: {
-        bgGradient: 'linear-gradient(180deg, #FFF5F5 0%, #FFD1DC 100%)',
-        colors: ['#FFB5C2','#FFD1DC','#FFABAB','#FFC8D6','#FFE0E5','#FF9CB0','#FFC2D0','#FFDDE5','#FFBFC9','#FFD6E0','#FFAAA8','#FFC8D0','#FFE5EA','#FFBAD0','#FFD0DA','#FFCCD5','#FF9FB5','#FFD8E2','#FFB8C8','#FFE2E8'],
-        borderColor: 'rgba(255,255,255,0.6)', textColor: '#8D6E7F', centerColor: '#FFD1DC'
+        bgGradient: 'linear-gradient(180deg, #FFF5F5 0%, #FFF0E6 100%)',
+        colors: ['#FFB5C2','#FFF0E6','#FFABAB','#FFC8D6','#FFE0E5','#FF9CB0','#FFC2D0','#FFDDE5','#FFBFC9','#FFD6E0','#FFAAA8','#FFC8D0','#FFE5EA','#FFBAD0','#FFD0DA','#FFCCD5','#FF9FB5','#FFD8E2','#FFB8C8','#FFE2E8'],
+        borderColor: 'rgba(255,255,255,0.6)', textColor: '#8D6E7F', centerColor: '#FFF0E6'
       },
       cyber: {
         bgGradient: 'linear-gradient(180deg, #0a0a1a 0%, #120825 100%)',
@@ -1313,7 +1313,7 @@ const WHEEL_STYLES = {
     themes: {
       candy: {
         bgGradient: 'linear-gradient(180deg, #FFF0F5 0%, #E8D5F5 100%)',
-        colors: ['#FFB7C5','#FFD6E0','#E8D5F5','#FFC2D0','#F5E0EB','#FFC8D8','#E0D0F0','#FFD4DE','#F0DDF5','#FFBFC9','#E5D8F2','#FFD0DA','#EDD8F0','#FFC5D2','#E2D5EE','#FFCCD8','#F0E0F5','#FFBAD0','#E8DCF3','#FFD8E2'],
+        colors: ['#FFCC80','#FFD6E0','#E8D5F5','#FFC2D0','#F5E0EB','#FFC8D8','#E0D0F0','#FFD4DE','#F0DDF5','#FFBFC9','#E5D8F2','#FFD0DA','#EDD8F0','#FFC5D2','#E2D5EE','#FFCCD8','#F0E0F5','#FFBAD0','#E8DCF3','#FFD8E2'],
         borderColor: 'rgba(255,255,255,0.5)', textColor: '#8D7E8F', centerColor: '#E8D5F5'
       },
       cyber: {
@@ -1569,8 +1569,8 @@ const App = {
       d.classList.toggle('active', d.dataset.theme === name);
     });
     // 更新 meta theme-color
-    const colors = { candy: '#FF8FA3', cyber: '#0a0a1a', minimal: '#fafafa' };
-    document.querySelector('meta[name="theme-color"]').content = colors[name] || '#FF8FA3';
+    const colors = { candy: '#FFAB76', cyber: '#0a0a1a', minimal: '#fafafa' };
+    document.querySelector('meta[name="theme-color"]').content = colors[name] || '#FFAB76';
   },
 
   /* ---- 底部导航同步 ---- */
@@ -1636,12 +1636,8 @@ const App = {
       if (btn && !this.isSpinning) btn.click();
     });
 
-    // 模板管理器
-    document.getElementById('btnTemplateManager').addEventListener('click', () => {
-      this.renderTemplateList();
-      document.getElementById('modalTemplate').classList.add('active');
-    });
-    document.getElementById('btnTemplateClose').addEventListener('click', () => {
+    // 模板弹窗关闭
+    document.getElementById('btnTemplateClose')?.addEventListener('click', () => {
       document.getElementById('modalTemplate').classList.remove('active');
     });
   },
@@ -1708,30 +1704,30 @@ const App = {
           <div class="empty-illustration">
             <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
               <!-- 左耳 -->
-              <circle cx="25" cy="28" r="18" fill="#FF8FA3"/>
-              <circle cx="25" cy="28" r="10" fill="#FFD1DC"/>
+              <circle cx="25" cy="28" r="18" fill="#F5BD8A"/>
+              <circle cx="25" cy="28" r="10" fill="#FDE8D0"/>
               <!-- 右耳 -->
-              <circle cx="95" cy="28" r="18" fill="#FF8FA3"/>
-              <circle cx="95" cy="28" r="10" fill="#FFD1DC"/>
+              <circle cx="95" cy="28" r="18" fill="#F5BD8A"/>
+              <circle cx="95" cy="28" r="10" fill="#FDE8D0"/>
               <!-- 脸 -->
               <circle cx="60" cy="60" r="42" fill="url(#bearFace)"/>
               <!-- 眼睛 -->
-              <circle cx="44" cy="54" r="5" fill="#8D6E7F"/>
+              <circle cx="44" cy="54" r="5" fill="#6D5B50"/>
               <circle cx="45.5" cy="52" r="2" fill="#FFF"/>
-              <circle cx="76" cy="54" r="5" fill="#8D6E7F"/>
+              <circle cx="76" cy="54" r="5" fill="#6D5B50"/>
               <circle cx="77.5" cy="52" r="2" fill="#FFF"/>
               <!-- 腮红 -->
-              <ellipse cx="34" cy="64" rx="7" ry="4" fill="rgba(255,143,163,0.35)"/>
-              <ellipse cx="86" cy="64" rx="7" ry="4" fill="rgba(255,143,163,0.35)"/>
+              <ellipse cx="34" cy="64" rx="7" ry="4" fill="rgba(255,143,163,0.3)"/>
+              <ellipse cx="86" cy="64" rx="7" ry="4" fill="rgba(255,143,163,0.3)"/>
               <!-- 鼻子 -->
-              <ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#E87A8F"/>
-              <ellipse cx="58.5" cy="67" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.35)"/>
+              <ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#D4866B"/>
+              <ellipse cx="58.5" cy="67" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.3)"/>
               <!-- 嘴巴 -->
-              <path d="M54 75 Q60 80 60 74 Q60 80 66 75" stroke="#E87A8F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M54 75 Q60 80 60 74 Q60 80 66 75" stroke="#D4866B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
               <defs>
                 <radialGradient id="bearFace" cx="38%" cy="32%">
-                  <stop offset="0%" stop-color="#FFB7C5"/>
-                  <stop offset="100%" stop-color="#FF8FA3"/>
+                  <stop offset="0%" stop-color="#FACC9D"/>
+                  <stop offset="100%" stop-color="#F5BD8A"/>
                 </radialGradient>
               </defs>
             </svg>
@@ -1902,7 +1898,7 @@ const App = {
 
     // 初始化圈编辑
     let ringCount = wheelData?.rings?.length || 4;
-    const ringColors = ['#FFB5C2','#FFD1DC','#FFABAB','#FFC8D6','#FFE0E5','#FF9CB0'];
+    const ringColors = ['#FFB5C2','#FFF0E6','#FFABAB','#FFC8D6','#FFE0E5','#FF9CB0'];
 
     const updateRingsEditor = () => {
       const editor = document.getElementById('ringsEditor');

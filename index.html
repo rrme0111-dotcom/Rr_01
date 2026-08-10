@@ -318,7 +318,7 @@ body {
   color: var(--primary);
 }
 
-.card-edit-btn {
+.card-edit-btn, .card-del-btn {
   flex-shrink: 0;
   cursor: pointer;
   border: none;
@@ -326,9 +326,14 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  font-size: 14px;
+  font-size: 13px;
   width: 32px;
   height: 32px;
+}
+
+.card-del-btn {
+  background: #FFF0F0;
+  color: #E88;
 }
 
 .btn-danger {
@@ -984,10 +989,13 @@ body {
     <div class="page-header">
       <h1 class="page-title">🎡 甜心转盘</h1>
       <p class="page-subtitle">转一转，帮你做决定~</p>
-      <div class="theme-switcher" id="themeSwitcher">
-        <span class="theme-dot candy active" data-theme="candy" title="甜心糖果"></span>
-        <span class="theme-dot cyber" data-theme="cyber" title="幻夜炫酷"></span>
-        <span class="theme-dot minimal" data-theme="minimal" title="简约素净"></span>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <div class="theme-switcher" id="themeSwitcher">
+          <span class="theme-dot candy active" data-theme="candy" title="甜心糖果"></span>
+          <span class="theme-dot cyber" data-theme="cyber" title="幻夜炫酷"></span>
+          <span class="theme-dot minimal" data-theme="minimal" title="简约素净"></span>
+        </div>
+        <button class="btn btn-sm btn-secondary" id="btnTemplateManager" style="height:28px;font-size:12px;padding:0 12px;">📋 模板库</button>
       </div>
     </div>
     <div class="install-banner" id="installBanner" style="display:none;">
@@ -1035,6 +1043,20 @@ body {
       <div class="result-actions">
         <button class="btn btn-secondary" id="btnResultClose">↩ 返回</button>
         <button class="btn btn-primary" id="btnResultSpinAgain">🔄 再转一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 模板管理弹窗 ========== -->
+  <div class="modal-overlay" id="modalTemplate">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h2 class="result-title">📋 模板库</h2>
+      <div class="result-list" id="templateList">
+        <!-- 由 JS 动态渲染 -->
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-secondary" id="btnTemplateClose" style="flex:1;">关闭</button>
       </div>
     </div>
   </div>
@@ -1291,6 +1313,21 @@ const TEMPLATES = [
   }
 ];
 
+/* ---- 自定义模板存储 ---- */
+function loadCustomTemplates() {
+  try {
+    return JSON.parse(localStorage.getItem('sweet-wheel-custom-templates') || '[]');
+  } catch(e) { return []; }
+}
+
+function saveCustomTemplates(templates) {
+  localStorage.setItem('sweet-wheel-custom-templates', JSON.stringify(templates));
+}
+
+function getAllTemplates() {
+  return [...TEMPLATES, ...loadCustomTemplates().map(t => ({ ...t, isCustom: true }))];
+}
+
 /* ============================================
    应用主控 — 甜心转盘
    ============================================ */
@@ -1317,6 +1354,29 @@ const App = {
     if (name !== 'spinner') {
       document.body.style.background = '';
     }
+    // 写入浏览器历史，使 Android WebView canGoBack() 生效
+    if (window.history && this._lastView !== name) {
+      window.history.pushState({ view: name }, '', '#' + name);
+    }
+    this._lastView = name;
+  },
+
+  /* ---- 返回键处理（供 Android WebView 调用） ---- */
+  handleBackPress() {
+    // 结果弹窗开着 → 先关弹窗
+    const modal = document.getElementById('modalResult');
+    if (modal && modal.classList.contains('active')) {
+      modal.classList.remove('active');
+      return 'true';
+    }
+    // 非首页 → 回首页
+    if (this.currentView !== 'home') {
+      this.renderHome();
+      this.showView('home');
+      return 'true';
+    }
+    // 已在首页 → 允许退出
+    return 'false';
   },
 
   /* ---- 数据操作（阶段2将增强） ---- */
@@ -1434,6 +1494,64 @@ const App = {
       document.getElementById('modalResult').classList.remove('active');
       this.startSpin();
     });
+
+    // 模板管理器
+    document.getElementById('btnTemplateManager').addEventListener('click', () => {
+      this.renderTemplateList();
+      document.getElementById('modalTemplate').classList.add('active');
+    });
+    document.getElementById('btnTemplateClose').addEventListener('click', () => {
+      document.getElementById('modalTemplate').classList.remove('active');
+    });
+  },
+
+  /* ---- 模板管理器渲染 ---- */
+  renderTemplateList() {
+    const list = document.getElementById('templateList');
+    const all = getAllTemplates();
+    if (all.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;">还没有模板</p>';
+      return;
+    }
+    let html = '';
+    all.forEach((t, i) => {
+      html += `
+        <div class="result-item" style="cursor:pointer;${t.isCustom ? '' : 'background:var(--bg-start);'}">
+          <span style="font-size:24px;">${t.emoji}</span>
+          <span class="result-ring-value" data-tpl-name="${t.name}" style="flex:1;">${t.name}</span>
+          <span style="font-size:11px;color:var(--text-secondary);">${t.rings.length}圈</span>
+          ${t.isCustom ? `<button class="btn-icon card-del-btn" data-del-tpl="${i}" style="width:28px;height:28px;font-size:11px;">×</button>` : ''}
+        </div>`;
+    });
+    list.innerHTML = html;
+
+    // 点击模板加载
+    list.querySelectorAll('.result-ring-value').forEach(el => {
+      el.addEventListener('click', () => {
+        const name = el.dataset.tplName;
+        const tpl = all.find(t => t.name === name);
+        if (tpl) {
+          this.currentWheelId = null;
+          this.renderEditor({ rings: tpl.rings, style: 'strawberry', name: tpl.emoji + ' ' + tpl.name });
+          this.showView('editor');
+          document.getElementById('modalTemplate').classList.remove('active');
+          this.toast('📋 ' + tpl.name + ' 已加载！');
+        }
+      });
+    });
+
+    // 删除自定义模板
+    list.querySelectorAll('[data-del-tpl]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.delTpl);
+        const custom = loadCustomTemplates();
+        const removed = custom.splice(idx - TEMPLATES.length, 1);
+        saveCustomTemplates(custom);
+        this.renderTemplateList();
+        this.toast('🗑️ 模板已删除');
+      });
+    });
   },
 
   /* ========================================
@@ -1496,6 +1614,7 @@ const App = {
             <div class="wheel-card-meta">${w.rings.length}圈 · ${w.rings.reduce((s,r) => s + r.options.length, 0)}个选项 · ${w.spinDuration || 4}秒</div>
           </div>
           <button class="btn-icon card-edit-btn" data-edit-id="${w.id}" title="编辑">✏️</button>
+          <button class="btn-icon card-del-btn" data-del-id="${w.id}" title="删除">🗑️</button>
           <span class="wheel-card-arrow">›</span>
         </div>
       `).join('');
@@ -1512,6 +1631,20 @@ const App = {
             this.currentWheelId = id;
             this.renderEditor(wheel);
             this.showView('editor');
+          }
+        });
+      });
+
+      // 删除按钮
+      container.querySelectorAll('.card-del-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.delId;
+          if (confirm('确定要删除这个转盘吗？')) {
+            const wheels = this.loadWheels().filter(w => w.id !== id);
+            this.saveWheels(wheels);
+            this.renderHome();
+            this.toast('🗑️ 已删除');
           }
         });
       });
@@ -1596,7 +1729,7 @@ const App = {
       <div class="form-group">
         <label class="form-label">📋 快速模板</label>
         <div class="template-section" id="templateSection">
-          ${TEMPLATES.map(t => `
+          ${getAllTemplates().map(t => `
             <button class="btn-template" data-template="${t.name}">${t.emoji} ${t.name}</button>
           `).join('')}
         </div>
@@ -1615,9 +1748,14 @@ const App = {
         <span style="font-size:11px;color:var(--primary);opacity:0.6;margin-top:4px;">💡 最短 0.5 秒，数字越小转得越快</span>
       </div>
 
-      <button class="btn btn-primary" style="width:100%;margin-top:var(--space-md);" id="btnSaveWheel">
-        💾 保存转盘
-      </button>
+      <div style="display:flex;gap:12px;margin-top:var(--space-md);">
+        <button class="btn btn-primary" style="flex:1;" id="btnSaveWheel">
+          💾 保存转盘
+        </button>
+        <button class="btn btn-secondary" style="flex-shrink:0;min-width:auto;padding:0 16px;" id="btnSaveAsTemplate">
+          📋 存为模板
+        </button>
+      </div>
     `;
 
     // 初始化圈编辑
@@ -1722,11 +1860,44 @@ const App = {
       this.showView('home');
     });
 
+    // 存为模板
+    document.getElementById('btnSaveAsTemplate').addEventListener('click', () => {
+      const name = document.getElementById('inputWheelName').value.trim() || '我的模板';
+      const rings = [];
+      document.querySelectorAll('#ringsEditor .ring-editor-card').forEach(card => {
+        const nameInput = card.querySelector('.ring-editor-name');
+        const optionInputs = card.querySelectorAll('.ring-option-input');
+        const opts = Array.from(optionInputs).map(inp => inp.value.trim()).filter(v => v);
+        if (opts.length >= 2) {
+          rings.push({
+            name: nameInput?.value?.trim() || `第${rings.length+1}圈`,
+            options: opts
+          });
+        }
+      });
+      if (rings.length < 2) {
+        this.toast('⚠️ 至少需要2圈，每圈至少2个选项');
+        return;
+      }
+      const templates = loadCustomTemplates();
+      // 避免重名
+      const baseName = name.replace(/^[^\s]+\s/, ''); // 去掉可能的前缀emoji
+      const finalName = baseName || name;
+      templates.push({
+        id: Date.now().toString(36),
+        emoji: '⭐',
+        name: finalName,
+        rings: rings
+      });
+      saveCustomTemplates(templates);
+      this.toast('📋 模板已保存！');
+    });
+
     // 模板点击
     document.querySelectorAll('#templateSection .btn-template').forEach(btn => {
       btn.addEventListener('click', () => {
         const name = btn.dataset.template;
-        const tpl = TEMPLATES.find(t => t.name === name);
+        const tpl = getAllTemplates().find(t => t.name === name);
         if (!tpl) return;
         document.getElementById('inputWheelName').value = tpl.emoji + ' ' + tpl.name;
         ringCount = tpl.rings.length;
@@ -2018,6 +2189,16 @@ const App = {
     return div.innerHTML;
   }
 };
+
+/* ---- 浏览器返回按钮（popstate） ---- */
+window.addEventListener('popstate', (e) => {
+  if (e.state && e.state.view) {
+    App.showView(e.state.view);
+    if (e.state.view === 'home') App.renderHome();
+  } else {
+    App.handleBackPress();
+  }
+});
 
 /* ---- 启动应用 ---- */
 document.addEventListener('DOMContentLoaded', () => App.init());

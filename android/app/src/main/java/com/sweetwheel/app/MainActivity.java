@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
+import android.webkit.JavascriptInterface;
 import android.view.WindowManager;
 import android.os.Build;
 import android.view.View;
+import android.view.KeyEvent;
 
 public class MainActivity extends Activity {
+    private WebView webView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +29,7 @@ public class MainActivity extends Activity {
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        WebView webView = new WebView(this);
+        webView = new WebView(this);
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
@@ -37,9 +41,27 @@ public class MainActivity extends Activity {
         settings.setLoadWithOverviewMode(true);
         settings.setSupportZoom(false);
 
-        // 在 WebView 内打开链接，不跳系统浏览器
         webView.setWebViewClient(new WebViewClient());
 
         webView.loadUrl("https://rrme0111-dotcom.github.io/Rr_01/");
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 通过 JS bridge 询问网页是否需要在内部导航
+        webView.evaluateJavascript("App.handleBackPress()", value -> {
+            if ("true".equals(value)) {
+                // JS 处理了返回（回到首页等），不退出
+            } else {
+                // JS 返回 false，说明已在首页，正常退出
+                runOnUiThread(() -> {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                    } else {
+                        super.onBackPressed();
+                    }
+                });
+            }
+        });
     }
 }

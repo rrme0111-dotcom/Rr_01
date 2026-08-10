@@ -1031,14 +1031,6 @@ body {
     <div class="page-header">
       <h1 class="page-title">🎡 甜心转盘</h1>
       <p class="page-subtitle">转一转，帮你做决定~</p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
-        <div class="theme-switcher" id="themeSwitcher">
-          <button class="theme-btn candy active" data-theme="candy">🍓 甜心</button>
-          <button class="theme-btn cyber" data-theme="cyber">🌃 幻夜</button>
-          <button class="theme-btn minimal" data-theme="minimal">🤍 简约</button>
-        </div>
-        <button class="btn btn-sm btn-secondary" id="btnTemplateManager" style="height:28px;font-size:12px;padding:0 12px;">📋 模板库</button>
-      </div>
     </div>
     <div class="install-banner" id="installBanner" style="display:none;">
       <span>📱 可安装到手机桌面</span>
@@ -1047,9 +1039,6 @@ body {
     <div class="home-content" id="homeContent">
       <!-- 由 JS 动态渲染 -->
     </div>
-    <button class="btn btn-primary fab" id="btnNewWheel">
-      ✨ 新建转盘
-    </button>
   </section>
 
   <!-- ========== 视图2: 编辑页 ========== -->
@@ -1622,13 +1611,6 @@ const App = {
       dot.addEventListener('click', () => this.setTheme(dot.dataset.theme));
     });
 
-    // 新建转盘
-    document.getElementById('btnNewWheel').addEventListener('click', () => {
-      this.currentWheelId = null;
-      this.renderEditor();
-      this.showView('editor');
-    });
-
     // 编辑页返回
     document.getElementById('btnEditorBack').addEventListener('click', () => {
       this.renderHome();
@@ -1726,30 +1708,30 @@ const App = {
           <div class="empty-illustration">
             <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
               <!-- 左耳 -->
-              <circle cx="25" cy="28" r="18" fill="#C28B6E"/>
-              <circle cx="25" cy="28" r="10" fill="#E8C9B0"/>
+              <circle cx="25" cy="28" r="18" fill="#FF8FA3"/>
+              <circle cx="25" cy="28" r="10" fill="#FFD1DC"/>
               <!-- 右耳 -->
-              <circle cx="95" cy="28" r="18" fill="#C28B6E"/>
-              <circle cx="95" cy="28" r="10" fill="#E8C9B0"/>
+              <circle cx="95" cy="28" r="18" fill="#FF8FA3"/>
+              <circle cx="95" cy="28" r="10" fill="#FFD1DC"/>
               <!-- 脸 -->
               <circle cx="60" cy="60" r="42" fill="url(#bearFace)"/>
               <!-- 眼睛 -->
-              <circle cx="44" cy="54" r="5" fill="#3E2723"/>
+              <circle cx="44" cy="54" r="5" fill="#8D6E7F"/>
               <circle cx="45.5" cy="52" r="2" fill="#FFF"/>
-              <circle cx="76" cy="54" r="5" fill="#3E2723"/>
+              <circle cx="76" cy="54" r="5" fill="#8D6E7F"/>
               <circle cx="77.5" cy="52" r="2" fill="#FFF"/>
               <!-- 腮红 -->
-              <ellipse cx="34" cy="64" rx="7" ry="4" fill="rgba(255,150,140,0.3)"/>
-              <ellipse cx="86" cy="64" rx="7" ry="4" fill="rgba(255,150,140,0.3)"/>
+              <ellipse cx="34" cy="64" rx="7" ry="4" fill="rgba(255,143,163,0.35)"/>
+              <ellipse cx="86" cy="64" rx="7" ry="4" fill="rgba(255,143,163,0.35)"/>
               <!-- 鼻子 -->
-              <ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#A67B6B"/>
+              <ellipse cx="60" cy="68" rx="6" ry="4.5" fill="#E87A8F"/>
               <ellipse cx="58.5" cy="67" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.35)"/>
               <!-- 嘴巴 -->
-              <path d="M54 75 Q60 80 60 74 Q60 80 66 75" stroke="#A67B6B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M54 75 Q60 80 60 74 Q60 80 66 75" stroke="#E87A8F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
               <defs>
                 <radialGradient id="bearFace" cx="38%" cy="32%">
-                  <stop offset="0%" stop-color="#DDB89E"/>
-                  <stop offset="100%" stop-color="#C28B6E"/>
+                  <stop offset="0%" stop-color="#FFB7C5"/>
+                  <stop offset="100%" stop-color="#FF8FA3"/>
                 </radialGradient>
               </defs>
             </svg>

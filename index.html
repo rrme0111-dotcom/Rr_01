@@ -125,6 +125,7 @@ body {
   font-weight: 400;
   color: var(--text-color);
   background: linear-gradient(180deg, var(--bg-start) 0%, var(--primary-light) 100%);
+  transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
@@ -153,6 +154,7 @@ body {
   flex-direction: column;
   flex: 1;
   padding: var(--space-lg);
+  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0px));
   animation: viewEnter 300ms var(--ease-out);
 }
 
@@ -189,24 +191,29 @@ body {
 /* 主题切换器 */
 .theme-switcher {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   justify-content: center;
-  margin-top: 12px;
 }
-.theme-dot {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid transparent;
+.theme-btn {
+  border: 2px solid var(--divider);
+  border-radius: var(--radius-xl);
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-stack);
   transition: all 0.2s var(--ease-out);
-  position: relative;
+  white-space: nowrap;
 }
-.theme-dot:active { transform: scale(0.9); }
-.theme-dot.active { border-color: var(--text-color); box-shadow: 0 0 0 3px var(--divider); }
-.theme-dot.candy  { background: linear-gradient(135deg, #FF8FA3, #FFD1DC); }
-.theme-dot.cyber  { background: linear-gradient(135deg, #b347ea, #0a0a1a); }
-.theme-dot.minimal { background: linear-gradient(135deg, #888, #f0f0f0); }
+.theme-btn:active { transform: scale(0.95); }
+.theme-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-pressed);
+}
 
 /* ============================================
    头部导航栏
@@ -326,20 +333,49 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  font-size: 13px;
-  width: 32px;
-  height: 32px;
+  font-size: 14px;
+  width: 36px;
+  height: 36px;
 }
 
 .card-del-btn {
-  background: #FFF0F0;
-  color: #E88;
+  background: var(--divider);
+  color: var(--primary-deep);
 }
 
 .btn-danger {
   background: #FF5252;
   color: var(--card-bg);
 }
+
+/* 底部导航栏 */
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--card-bg);
+  border-top: 1px solid var(--divider);
+  padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  z-index: 100;
+}
+.bottom-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 4px 18px;
+  font-family: var(--font-stack);
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-btn.active { color: var(--primary); }
+.bottom-nav-icon { font-size: 22px; line-height: 1; }
+.bottom-nav-label { font-size: 10px; font-weight: 600; }
 
 /* 浮动操作按钮 */
 .fab {
@@ -458,38 +494,39 @@ body {
 /* 转盘卡片列表 */
 .wheel-list {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding-bottom: 100px; /* 为 FAB 留空间 */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 100px;
 }
 
 .wheel-card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 16px 12px 10px;
   box-shadow: var(--shadow-card);
   cursor: pointer;
   transition: all 0.2s var(--ease-out);
-  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--space-md);
+  text-align: center;
+  gap: 6px;
 }
 
 .wheel-card:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
   box-shadow: var(--shadow-pressed);
 }
 
 .wheel-card-icon {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 24px;
   flex-shrink: 0;
 }
 
@@ -498,24 +535,29 @@ body {
 .wheel-card-icon.cake       { background: #FFF5F0; }
 
 .wheel-card-info {
-  flex: 1;
   min-width: 0;
 }
 
 .wheel-card-name {
-  font-size: var(--font-md);
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-color);
-  margin-bottom: var(--space-xs);
+  margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .wheel-card-meta {
-  font-size: var(--font-xs);
-  color: var(--primary);
-  opacity: 0.7;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.wheel-card-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
 }
 
 .wheel-card-arrow {
@@ -665,8 +707,8 @@ body {
 }
 
 .btn-remove-option {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
   background: #FEE;
@@ -991,9 +1033,9 @@ body {
       <p class="page-subtitle">转一转，帮你做决定~</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
         <div class="theme-switcher" id="themeSwitcher">
-          <span class="theme-dot candy active" data-theme="candy" title="甜心糖果"></span>
-          <span class="theme-dot cyber" data-theme="cyber" title="幻夜炫酷"></span>
-          <span class="theme-dot minimal" data-theme="minimal" title="简约素净"></span>
+          <button class="theme-btn candy active" data-theme="candy">🍓 甜心</button>
+          <button class="theme-btn cyber" data-theme="cyber">🌃 幻夜</button>
+          <button class="theme-btn minimal" data-theme="minimal">🤍 简约</button>
         </div>
         <button class="btn btn-sm btn-secondary" id="btnTemplateManager" style="height:28px;font-size:12px;padding:0 12px;">📋 模板库</button>
       </div>
@@ -1060,6 +1102,50 @@ body {
       </div>
     </div>
   </div>
+
+  <!-- ========== 视图4: 设置页 ========== -->
+  <section class="view" id="viewSettings">
+    <div class="page-header" style="padding-top:8px;">
+      <h1 class="page-title" style="font-size:22px;">⚙️ 设置</h1>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+      <!-- 主题 -->
+      <div class="form-group">
+        <label class="form-label">🎨 界面主题</label>
+        <div class="theme-switcher" id="themeSwitcher2" style="justify-content:flex-start;">
+          <button class="theme-btn candy active" data-theme="candy">🍓 甜心</button>
+          <button class="theme-btn cyber" data-theme="cyber">🌃 幻夜</button>
+          <button class="theme-btn minimal" data-theme="minimal">🤍 简约</button>
+        </div>
+      </div>
+      <!-- 模板管理 -->
+      <div class="form-group">
+        <label class="form-label">📋 模板管理</label>
+        <button class="btn btn-secondary" id="btnTemplateSettings" style="width:100%;">📋 管理我的模板</button>
+      </div>
+      <!-- 关于 -->
+      <div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:12px;margin-top:auto;">
+        <p>🎡 甜心转盘 v1.0</p>
+        <p style="margin-top:4px;">多层同心转盘 · 帮你做决定</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 底部导航栏 ========== -->
+  <nav class="bottom-nav">
+    <button class="bottom-nav-btn active" data-nav="home">
+      <span class="bottom-nav-icon">🏠</span>
+      <span class="bottom-nav-label">首页</span>
+    </button>
+    <button class="bottom-nav-btn" data-nav="editor">
+      <span class="bottom-nav-icon">✏️</span>
+      <span class="bottom-nav-label">新建</span>
+    </button>
+    <button class="bottom-nav-btn" data-nav="settings">
+      <span class="bottom-nav-icon">⚙️</span>
+      <span class="bottom-nav-label">设置</span>
+    </button>
+  </nav>
 
 </div>
 
@@ -1143,7 +1229,13 @@ const Confetti = {
     this.resize();
     this.particles = [];
 
-    const colors = ['#FF8FA3','#FFD1DC','#FFB7C5','#FF9CB0','#FFF5F5','#FFABAB','#FFC8D6','#FFE082'];
+    const theme = document.documentElement.getAttribute('data-theme') || 'candy';
+    const palettes = {
+      candy: ['#FF8FA3','#FFD1DC','#FFB7C5','#FF9CB0','#FFF5F5','#FFABAB','#FFC8D6','#FFE082'],
+      cyber: ['#b347ea','#7b2ff7','#d45dff','#9b30ff','#c44dff','#ff9100','#ffab00','#ffa000'],
+      minimal: ['#888','#aaa','#999','#bbb','#777','#ccc','#ddd','#eee']
+    };
+    const colors = palettes[theme] || palettes.candy;
     for (let i = 0; i < 60; i++) {
       this.particles.push({
         x: Math.random() * this.canvas.width,
@@ -1484,7 +1576,7 @@ const App = {
   setTheme(name) {
     document.documentElement.setAttribute('data-theme', name);
     localStorage.setItem('sweet-wheel-theme', name);
-    document.querySelectorAll('#themeSwitcher .theme-dot').forEach(d => {
+    document.querySelectorAll('.theme-btn').forEach(d => {
       d.classList.toggle('active', d.dataset.theme === name);
     });
     // 更新 meta theme-color
@@ -1492,10 +1584,41 @@ const App = {
     document.querySelector('meta[name="theme-color"]').content = colors[name] || '#FF8FA3';
   },
 
+  /* ---- 底部导航同步 ---- */
+  _syncNav(view) {
+    const map = { home: 'home', editor: 'editor', spinner: 'home', settings: 'settings' };
+    const active = map[view] || 'home';
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.nav === active);
+    });
+  },
+
   /* ---- 事件绑定 ---- */
   bindEvents() {
+    // 底部导航
+    document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nav = btn.dataset.nav;
+        if (nav === 'home') { this.renderHome(); this.showView('home'); }
+        else if (nav === 'editor') { this.currentWheelId = null; this.renderEditor(); this.showView('editor'); }
+        else if (nav === 'settings') { this.showView('settings'); }
+        this._syncNav(nav);
+      });
+    });
+
+    // 设置页主题同步
+    document.querySelectorAll('#themeSwitcher2 .theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => this.setTheme(btn.dataset.theme));
+    });
+
+    // 设置页模板管理
+    document.getElementById('btnTemplateSettings')?.addEventListener('click', () => {
+      this.renderTemplateList();
+      document.getElementById('modalTemplate').classList.add('active');
+    });
+
     // 主题切换
-    document.querySelectorAll('#themeSwitcher .theme-dot').forEach(dot => {
+    document.querySelectorAll('#themeSwitcher .theme-btn').forEach(dot => {
       dot.addEventListener('click', () => this.setTheme(dot.dataset.theme));
     });
 
@@ -1527,7 +1650,8 @@ const App = {
 
     document.getElementById('btnResultSpinAgain').addEventListener('click', () => {
       document.getElementById('modalResult').classList.remove('active');
-      this.startSpin();
+      const btn = document.getElementById('btnSpin');
+      if (btn && !this.isSpinning) btn.click();
     });
 
     // 模板管理器
@@ -1646,11 +1770,12 @@ const App = {
           </div>
           <div class="wheel-card-info">
             <div class="wheel-card-name">${this.escapeHtml(w.name)}</div>
-            <div class="wheel-card-meta">${w.rings.length}圈 · ${w.rings.reduce((s,r) => s + r.options.length, 0)}个选项 · ${w.spinDuration || 4}秒</div>
+            <div class="wheel-card-meta">${w.rings.length}圈 · ${w.rings.reduce((s,r) => s + r.options.length, 0)}个选项</div>
           </div>
-          <button class="btn-icon card-edit-btn" data-edit-id="${w.id}" title="编辑">✏️</button>
-          <button class="btn-icon card-del-btn" data-del-id="${w.id}" title="删除">🗑️</button>
-          <span class="wheel-card-arrow">›</span>
+          <div class="wheel-card-actions">
+            <button class="btn-icon card-edit-btn" data-edit-id="${w.id}" title="编辑">✏️</button>
+            <button class="btn-icon card-del-btn" data-del-id="${w.id}" title="删除">🗑️</button>
+          </div>
         </div>
       `).join('');
 
@@ -1787,7 +1912,7 @@ const App = {
         <button class="btn btn-primary" style="flex:1;" id="btnSaveWheel">
           💾 保存转盘
         </button>
-        <button class="btn btn-secondary" style="flex-shrink:0;min-width:auto;padding:0 16px;" id="btnSaveAsTemplate">
+        <button class="btn btn-secondary" id="btnSaveAsTemplate" style="flex-shrink:0;min-width:auto;padding:0 16px;">
           📋 存为模板
         </button>
       </div>
@@ -1891,8 +2016,9 @@ const App = {
       this.saveWheels(wheels);
 
       this.toast('✅ 保存成功！');
-      this.renderHome();
-      this.showView('home');
+      this.currentWheelId = wheel.id;
+      this.renderSpinner(wheel);
+      this.showView('spinner');
     });
 
     // 存为模板

@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
 import android.view.WindowManager;
 import android.os.Build;
 import android.view.View;
@@ -42,6 +44,21 @@ public class MainActivity extends Activity {
         settings.setSupportZoom(false);
 
         webView.setWebViewClient(new WebViewClient());
+
+        // 支持 JS alert/confirm 弹窗
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+                new android.app.AlertDialog.Builder(MainActivity.this)
+                    .setTitle("甜心转盘")
+                    .setMessage(message)
+                    .setPositiveButton("确定", (dialog, which) -> result.confirm())
+                    .setNegativeButton("取消", (dialog, which) -> result.cancel())
+                    .setOnCancelListener(dialog -> result.cancel())
+                    .show();
+                return true;
+            }
+        });
 
         webView.loadUrl("https://rrme0111-dotcom.github.io/Rr_01/");
     }

@@ -1393,6 +1393,41 @@ const App = {
     localStorage.setItem('spinning-wheel-data', JSON.stringify({ wheels }));
   },
 
+  /* ---- 自定义确认弹窗 ---- */
+  _confirmCallbacks: {},
+
+  showConfirm(msg, onOk, onCancel) {
+    const id = Date.now();
+    this._confirmCallbacks[id] = { onOk, onCancel };
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.id = 'confirmOverlay_' + id;
+    overlay.style.cssText = 'display:flex;align-items:center;justify-content:center;z-index:3000;';
+    overlay.innerHTML = `
+      <div class="modal-sheet" style="border-radius:24px;max-width:320px;width:85%;padding:28px 24px 20px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
+        <div style="font-size:16px;font-weight:600;color:var(--text-color);margin-bottom:6px;">${msg}</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:20px;">此操作不可恢复</div>
+        <div style="display:flex;gap:12px;">
+          <button class="btn btn-secondary confirm-cancel-btn" style="flex:1;height:42px;">取消</button>
+          <button class="btn btn-primary confirm-ok-btn" style="flex:1;height:42px;background:linear-gradient(135deg,#FF5252,#E53935);">确定删除</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.confirm-ok-btn').addEventListener('click', () => {
+      overlay.remove();
+      if (onOk) onOk();
+    });
+    overlay.querySelector('.confirm-cancel-btn').addEventListener('click', () => {
+      overlay.remove();
+      if (onCancel) onCancel();
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) { overlay.remove(); if (onCancel) onCancel(); }
+    });
+  },
+
   /* ---- Toast 提示 ---- */
   toast(msg) {
     const el = document.createElement('div');
@@ -1640,12 +1675,12 @@ const App = {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const id = btn.dataset.delId;
-          if (confirm('确定要删除这个转盘吗？')) {
+          this.showConfirm('确定要删除这个转盘吗？', () => {
             const wheels = this.loadWheels().filter(w => w.id !== id);
             this.saveWheels(wheels);
             this.renderHome();
             this.toast('🗑️ 已删除');
-          }
+          });
         });
       });
 
@@ -1665,13 +1700,13 @@ const App = {
         let longPressTimer;
         card.addEventListener('touchstart', () => {
           longPressTimer = setTimeout(() => {
-            if (confirm('确定要删除这个转盘吗？')) {
-              const id = card.dataset.id;
+            const id = card.dataset.id;
+            this.showConfirm('确定要删除这个转盘吗？', () => {
               const wheels = this.loadWheels().filter(w => w.id !== id);
               this.saveWheels(wheels);
               this.renderHome();
               this.toast('🗑️ 已删除');
-            }
+            });
           }, 600);
         });
         card.addEventListener('touchend', () => clearTimeout(longPressTimer));

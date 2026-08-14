@@ -36,26 +36,26 @@
   --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-spin:    cubic-bezier(0.15, 0.80, 0.30, 0.98);
 
-  /* 🍓 甜心糖果主题（默认） */
+  /* 🍓 甜心糖果主题（默认）— 奶油马卡龙 */
   --primary:       #FF8FA3;
-  --primary-light: #FFD1DC;
-  --bg-start:      #FFF5F5;
-  --bg-end:        #FFD1DC;
-  --primary-deep:  #E87A8F;
-  --text-color:    #8D6E7F;
-  --text-secondary:#C0909F;
+  --primary-light: #FFC9D4;
+  --bg-start:      #FFF7F8;
+  --bg-end:        #FFE4E9;
+  --primary-deep:  #F0788E;
+  --text-color:    #6B5560;
+  --text-secondary:#B58E98;
   --card-bg:       #FFFFFF;
-  --card-border:   #FFD1DC;
-  --btn-bg:        linear-gradient(135deg, #FF8FA3, #E87A8F);
+  --card-border:   #FFE0E5;
+  --btn-bg:        linear-gradient(135deg, #FF9FB5, #F0788E);
   --btn-text:      #FFFFFF;
-  --input-border:  #FFD1DC;
-  --shadow-card:   0 4px 20px rgba(255, 143, 163, 0.20);
-  --shadow-button: 0 6px 24px rgba(255, 143, 163, 0.35);
-  --shadow-pressed:0 2px 8px rgba(255, 143, 163, 0.30);
-  --shadow-modal:  0 12px 48px rgba(0, 0, 0, 0.12);
-  --shadow-wheel:  0 8px 32px rgba(255, 143, 163, 0.30), 0 2px 8px rgba(255, 143, 163, 0.15);
-  --deco-opacity:  0.15;
-  --divider:       rgba(255,143,163,0.15);
+  --input-border:  #FFE0E5;
+  --shadow-card:   0 8px 24px rgba(255,143,163,0.14), 0 2px 6px rgba(255,143,163,0.08);
+  --shadow-button: 0 8px 20px rgba(255,143,163,0.34);
+  --shadow-pressed:0 3px 8px rgba(255,143,163,0.26);
+  --shadow-modal:  0 16px 48px rgba(0,0,0,0.14);
+  --shadow-wheel:  0 10px 32px rgba(255,143,163,0.26);
+  --deco-opacity:  0.4;
+  --divider:       #FFE3E8;
 }
 
 /* 🌃 幻夜炫酷主题 */
@@ -72,11 +72,11 @@
   --btn-bg:        linear-gradient(135deg, #b347ea, #7b2ff7);
   --btn-text:      #FFFFFF;
   --input-border:  #b347ea;
-  --shadow-card:   0 4px 24px rgba(179,71,234,0.25), 0 0 0 1px rgba(179,71,234,0.15);
-  --shadow-button: 0 6px 30px rgba(179,71,234,0.45), 0 0 20px rgba(179,71,234,0.2);
-  --shadow-pressed:0 2px 10px rgba(179,71,234,0.35);
-  --shadow-modal:  0 12px 48px rgba(0,0,0,0.5);
-  --shadow-wheel:  0 8px 40px rgba(179,71,234,0.4), 0 0 30px rgba(123,47,247,0.25);
+  --shadow-card:   0 6px 24px rgba(120,40,200,0.26), 0 0 0 1px rgba(179,71,234,0.12);
+  --shadow-button: 0 8px 26px rgba(179,71,234,0.38), 0 0 22px rgba(123,47,247,0.18);
+  --shadow-pressed:0 2px 8px rgba(179,71,234,0.30);
+  --shadow-modal:  0 16px 48px rgba(0,0,0,0.5);
+  --shadow-wheel:  0 10px 36px rgba(179,71,234,0.36), 0 0 28px rgba(123,47,247,0.22);
   --deco-opacity:  0.2;
   --divider:       rgba(179,71,234,0.2);
 }
@@ -95,11 +95,11 @@
   --btn-bg:        #444444;
   --btn-text:      #FFFFFF;
   --input-border:  #d0d0d0;
-  --shadow-card:   0 2px 12px rgba(0,0,0,0.06);
-  --shadow-button: 0 4px 16px rgba(0,0,0,0.1);
-  --shadow-pressed:0 1px 4px rgba(0,0,0,0.08);
-  --shadow-modal:  0 8px 40px rgba(0,0,0,0.1);
-  --shadow-wheel:  0 4px 20px rgba(0,0,0,0.08);
+  --shadow-card:   0 6px 18px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-button: 0 8px 20px rgba(0,0,0,0.12);
+  --shadow-pressed:0 2px 6px rgba(0,0,0,0.08);
+  --shadow-modal:  0 12px 40px rgba(0,0,0,0.12);
+  --shadow-wheel:  0 8px 24px rgba(0,0,0,0.10);
   --deco-opacity:  0.06;
   --divider:       rgba(0,0,0,0.06);
 }
@@ -124,7 +124,7 @@ body {
   font-size: var(--font-sm);
   font-weight: 400;
   color: var(--text-color);
-  background: linear-gradient(180deg, var(--bg-start) 0%, var(--primary-light) 100%);
+  background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
   transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
   min-height: 100vh;
   min-height: 100dvh;
@@ -283,12 +283,12 @@ body {
   padding: 0 var(--space-xl);
   min-width: 200px;
   box-shadow: var(--shadow-button);
-  animation: btnBreathe 2s ease-in-out infinite;
+  animation: btnBreathe 2.6s ease-in-out infinite;
 }
 
 @keyframes btnBreathe {
   0%, 100% { box-shadow: var(--shadow-button); }
-  50%      { box-shadow: var(--shadow-button), 0 0 24px var(--primary); }
+  50%      { box-shadow: var(--shadow-button), 0 4px 22px rgba(255,143,163,0.5); }
 }
 
 .btn-primary:active {
@@ -333,14 +333,22 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  font-size: 14px;
-  width: 36px;
-  height: 36px;
+  font-size: 15px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  transition: transform 0.2s var(--ease-out);
+}
+.card-edit-btn:active, .card-del-btn:active { transform: scale(0.9); }
+
+.card-edit-btn {
+  background: var(--primary-light);
+  color: var(--primary-deep);
 }
 
 .card-del-btn {
-  background: var(--divider);
-  color: var(--primary-deep);
+  background: #FEE7EC;
+  color: #F0788E;
 }
 
 .btn-danger {
@@ -377,6 +385,27 @@ body {
 .bottom-nav-icon { font-size: 22px; line-height: 1; }
 .bottom-nav-label { font-size: 10px; font-weight: 600; }
 
+/* 中间凸起的新建按钮 */
+.bottom-nav-btn.nav-fab { position: relative; }
+.nav-fab .bottom-nav-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--btn-bg);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  box-shadow: var(--shadow-button);
+  border: 4px solid var(--card-bg);
+  margin-top: -28px;
+  transition: transform 0.2s var(--ease-out);
+}
+.nav-fab:active .bottom-nav-icon { transform: scale(0.92); }
+.nav-fab .bottom-nav-label { color: var(--primary); }
+
 /* 浮动操作按钮 */
 .fab {
   position: fixed;
@@ -384,7 +413,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  animation: btnBreathe 2s ease-in-out infinite;
 }
 
 /* ============================================
@@ -491,58 +519,75 @@ body {
   line-height: 1.6;
 }
 
-/* 转盘卡片列表 */
+/* 转盘卡片列表 — 单列大卡片 */
 .wheel-list {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 110px;
 }
 
 .wheel-card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  padding: 16px 12px 10px;
+  padding: 16px;
   box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: all 0.2s var(--ease-out);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 6px;
+  gap: 14px;
 }
 
 .wheel-card:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
   box-shadow: var(--shadow-pressed);
 }
 
-.wheel-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
+/* 迷你转盘缩略图 */
+.wheel-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.wheel-card-icon.strawberry { background: #FFF0F3; }
-.wheel-card-icon.sakura     { background: #FFF0F7; }
-.wheel-card-icon.cake       { background: #FFF5F0; }
+.wheel-thumb-emoji {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+
+.wheel-thumb.strawberry {
+  background: conic-gradient(#FFB5C2, #FFF0E6, #FFABAB, #FFC8D6, #FFE0E5, #FF9CB0, #FFB5C2);
+}
+.wheel-thumb.sakura {
+  background: conic-gradient(#FFCCD8, #E8D5F5, #FFC2D0, #F0E0F5, #FFD4DE, #E0D0F0, #FFCCD8);
+}
+.wheel-thumb.cake {
+  background: conic-gradient(#FFB5C5, #FFF3C4, #D5C6F0, #FFABBC, #FFEDC0, #D8C8F0, #FFB5C5);
+}
 
 .wheel-card-info {
+  flex: 1;
   min-width: 0;
 }
 
 .wheel-card-name {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-color);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -550,19 +595,13 @@ body {
 }
 
 .wheel-card-meta {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
 .wheel-card-actions {
   display: flex;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-.wheel-card-arrow {
-  font-size: 20px;
-  color: var(--primary-light);
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -968,19 +1007,19 @@ body {
 .deco {
   position: absolute;
   opacity: var(--deco-opacity);
-  animation: decoFloat 8s ease-in-out infinite;
+  animation: decoFloat 9s ease-in-out infinite;
 }
 
-.deco:nth-child(1) { top: 5%;  left: 5%;  font-size: 32px; animation-delay: 0s; }
-.deco:nth-child(2) { top: 8%;  right: 8%; font-size: 24px; animation-delay: 2s; }
-.deco:nth-child(3) { top: 60%; left: 3%;  font-size: 20px; animation-delay: 4s; }
-.deco:nth-child(4) { top: 70%; right: 5%; font-size: 28px; animation-delay: 6s; }
-.deco:nth-child(5) { top: 30%; left: 88%; font-size: 18px; animation-delay: 3s; }
-.deco:nth-child(6) { top: 85%; left: 80%; font-size: 22px; animation-delay: 5s; }
+.deco:nth-child(1) { top: 5%;  left: 5%;  font-size: 34px; animation-delay: 0s; }
+.deco:nth-child(2) { top: 8%;  right: 8%; font-size: 26px; animation-delay: 2s; }
+.deco:nth-child(3) { top: 60%; left: 3%;  font-size: 22px; animation-delay: 4s; }
+.deco:nth-child(4) { top: 72%; right: 5%; font-size: 30px; animation-delay: 6s; }
+.deco:nth-child(5) { top: 30%; left: 88%; font-size: 20px; animation-delay: 3s; }
+.deco:nth-child(6) { top: 85%; left: 80%; font-size: 24px; animation-delay: 5s; }
 
 @keyframes decoFloat {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-15px) rotate(10deg); }
+  50%      { transform: translateY(-16px) rotate(12deg); }
 }
 
 /* ============================================
@@ -1114,7 +1153,7 @@ body {
       </div>
       <!-- 关于 -->
       <div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:12px;margin-top:auto;">
-        <p>🎡 甜心转盘 v1.0</p>
+        <p>🎡 甜心转盘 v2.0</p>
         <p style="margin-top:4px;">多层同心转盘 · 帮你做决定</p>
       </div>
     </div>
@@ -1126,8 +1165,8 @@ body {
       <span class="bottom-nav-icon">🏠</span>
       <span class="bottom-nav-label">首页</span>
     </button>
-    <button class="bottom-nav-btn" data-nav="editor">
-      <span class="bottom-nav-icon">✏️</span>
+    <button class="bottom-nav-btn nav-fab" data-nav="editor">
+      <span class="bottom-nav-icon">＋</span>
       <span class="bottom-nav-label">新建</span>
     </button>
     <button class="bottom-nav-btn" data-nav="settings">
@@ -1440,6 +1479,7 @@ const App = {
       window.history.pushState({ view: name }, '', '#' + name);
     }
     this._lastView = name;
+    this._syncNav(name);
   },
 
   /* ---- 返回键处理（供 Android WebView 调用） ---- */
@@ -1569,8 +1609,8 @@ const App = {
       d.classList.toggle('active', d.dataset.theme === name);
     });
     // 更新 meta theme-color
-    const colors = { candy: '#FFAB76', cyber: '#0a0a1a', minimal: '#fafafa' };
-    document.querySelector('meta[name="theme-color"]').content = colors[name] || '#FFAB76';
+    const colors = { candy: '#FF8FA3', cyber: '#0a0a1a', minimal: '#fafafa' };
+    document.querySelector('meta[name="theme-color"]').content = colors[name] || '#FF8FA3';
   },
 
   /* ---- 底部导航同步 ---- */
@@ -1743,16 +1783,16 @@ const App = {
       const styleEmojis = { strawberry: '🍓', sakura: '🌸', cake: '🎀' };
       const items = wheels.map(w => `
         <div class="wheel-card" data-id="${w.id}">
-          <div class="wheel-card-icon ${w.style || 'strawberry'}">
-            ${styleEmojis[w.style] || '🍓'}
+          <div class="wheel-thumb ${w.style || 'strawberry'}">
+            <span class="wheel-thumb-emoji">${styleEmojis[w.style] || '🍓'}</span>
           </div>
           <div class="wheel-card-info">
             <div class="wheel-card-name">${this.escapeHtml(w.name)}</div>
-            <div class="wheel-card-meta">${w.rings.length}圈 · ${w.rings.reduce((s,r) => s + r.options.length, 0)}个选项</div>
+            <div class="wheel-card-meta">${w.rings.length} 圈 · ${w.rings.reduce((s,r) => s + r.options.length, 0)} 个选项</div>
           </div>
           <div class="wheel-card-actions">
-            <button class="btn-icon card-edit-btn" data-edit-id="${w.id}" title="编辑">✏️</button>
-            <button class="btn-icon card-del-btn" data-del-id="${w.id}" title="删除">🗑️</button>
+            <button class="card-edit-btn" data-edit-id="${w.id}" title="编辑">✏️</button>
+            <button class="card-del-btn" data-del-id="${w.id}" title="删除">🗑️</button>
           </div>
         </div>
       `).join('');
@@ -2344,7 +2384,7 @@ document.addEventListener('DOMContentLoaded', () => App.init());
 
 /* ---- PWA Service Worker ---- */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 
 /* ---- 窗口尺寸变化时刷新旋转页 ---- */
